@@ -4,11 +4,22 @@
        	 <%= link_to "Gridworkz", '/', id: "logo" %>
         <nav>
           <ul class="nav navbar-nav navbar-right">
-            <li><%= link_to "Home",   '/' %></li>
-            <li><%= link_to "About", about_path%></li>
-            <li><%= link_to "Log in", login_path %></li>
-            <li><%= link_to "Sign up", signup_path %></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+            
+            <% if !logged_in? %>
+              <li><%= link_to "Home",   '/' %></li>
+              <li><%= link_to "About", about_path%></li> 
+              <li><%= link_to "Log in", login_path %></li>
+              <li><%= link_to "Sign up", signup_path %></li>
+              
+            </li>
+          <% else %>
+              <li><%= link_to "Game",   '/' %></li>
+              <li><%= link_to "About", about_path%></li> 
+              <li><%= link_to "Levels", '#' %></li>
+              <li><%= link_to "Profile", current_user %></li>
+              <li><%= button_to "Logout", logout_path, :method => :delete %></li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
+  </header>
