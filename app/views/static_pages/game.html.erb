@@ -13,22 +13,36 @@
  			var a_canvas = document.getElementById("a");
 			var context = a_canvas.getContext("2d");
 				//draw
-				var x = 20;
-				var y = 20;
+				var leftX = 150;
+				var leftY = 100;
+				var rightX = 700;
+				var rightY = 100;
 				for(var i = 0; i < 3; i++){
-					x = 20;
+					leftX = 150;
+					rightX = 700;
 					for(var j = 0; j < 3; j++){
-
+						//left grid
 						context.stroke();
 						context.fillStyle = "black";
 						context.fill();
 						context.lineWidth = 2;
 						context.beginPath();
-						context.strokeRect(x, y, 40, 40);
+						context.strokeRect(leftX, leftY, 100, 100);
 						context.closePath();
-						x = x + 40;
+
+						//right grid
+						context.stroke();
+						context.fillStyle = "black";
+						context.fill();
+						context.lineWidth = 2;
+						context.beginPath();
+						context.strokeRect(rightX, rightY, 100, 100);
+						context.closePath();
+						leftX = leftX + 100;
+						rightX = rightX + 100;
 					}
-					y = y + 40;
+					leftY = leftY + 100;
+					rightY = rightY +100;
 				}
 				
 
