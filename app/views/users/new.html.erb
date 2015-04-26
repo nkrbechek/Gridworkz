@@ -6,7 +6,7 @@
     <%= form_for(@user) do |f| %>
      <%= render 'shared/error_messages' %>
 
-      <%= f.label :name %>
+      <%= f.label :username %>
       <%= f.text_field :name, class: 'form-control' %>
 
       <%= f.label :age %>
@@ -15,7 +15,7 @@
       <%= f.label :gender, "Gender (M/F)" %>
       <%= f.text_field :gender, class: 'form-control' %>
 
-      <%= f.label :password %>
+      <%= f.label :password, "password(min. 6 characters) " %>
       <%= f.password_field :password, class: 'form-control' %>
 
       <%= f.label :password_confirmation, "Confirm password" %>
