@@ -1,7 +1,11 @@
 <header class="navbar navbar-fixed-top navbar-inverse">
      
       <div class="container">
-       	 <%= link_to "Gridworkz", '/', id: "logo" %>
+         <% if logged_in? %>
+       	    <%= link_to "Gridworkz", game_path,  id: "logo" %>
+          <% else %>
+            <%= link_to "Gridworkz", "/", id: "logo" %>
+          <% end %>
         <nav>
           <ul class="nav navbar-nav navbar-right">
             
@@ -13,9 +17,9 @@
               
             </li>
           <% else %>
-              <li><%= link_to "Game",   '/' %></li>
+              <li><%= link_to "Game",   game_path%></li>
               <li><%= link_to "About", about_path%></li> 
-              <li><%= link_to "Levels", '#' %></li>
+              <li><%= link_to "Levels", levels_path %></li>
               <li><%= link_to "Profile", current_user %></li>
               <li><%= button_to "Logout", logout_path, :method => :delete %></li>
           <% end %>
