@@ -53,8 +53,29 @@ function sides(gridsize)//not the most efficiant
 	while(filledSquares!=0)
 	{
 		var direction=Math.floor(Math.random()*4);
-
 		//0->i--, 1->i++, 2->j--, 3->j++;
+		var tempi;
+		var tempj;
+		switch(direction)
+		{
+			case 0:
+			 	tempi=starti--;
+			 	break;
+			case 1:
+				tempi=starti++;
+				break;
+			case 2:
+				tempj--;
+				break;
+			case 3:
+				tempj++;
+				break;
+		}//end switch case
+		if(tempi<gridsize && tempj<gridsize && tempi>=0 && tempj>=0 && result[i][j]==0 )
+		{
+			result[i][j]=1
+			filledSquares--;
+		}
 	}
 	return result;
 }
