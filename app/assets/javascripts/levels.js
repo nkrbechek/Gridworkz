@@ -13,7 +13,7 @@ function block(gridsize)
 	var rowNumber = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 	for (var i = 0; i <gridsize; i++) 
 	{
-		result[i]=new Array()
+		result[i]=new Array();
 		for (var j = 0; j <gridsize; j++) 
 		{  		
 			if(row==1)//row not column
@@ -50,7 +50,7 @@ function sides(gridsize)//not the most efficiant
 		}//end inner for loop
 	}//end outer for loop
 	//fillin squares
-	while(filledSquares!=0)
+	while(filledSquares!==0)
 	{
 		var direction=Math.floor(Math.random()*4);
 		//0->i--, 1->i++, 2->j--, 3->j++;
@@ -59,23 +59,23 @@ function sides(gridsize)//not the most efficiant
 		switch(direction)
 		{
 			case 0:
-			 	tempi=starti--;
+			 	tempi=starti-1;
 			 	break;
 			case 1:
-				tempi=starti++;
+				tempi=starti+1;
 				break;
 			case 2:
-				tempj--;
+				tempj-1;
 				break;
 			case 3:
-				tempj++;
+				tempj+1;
 				break;
 		}//end switch case
-		if(tempi<gridsize && tempj<gridsize && tempi>=0 && tempj>=0 && result[i][j]==0 )
+		if(tempi<gridsize && tempj<gridsize && tempi>=0 && tempj>=0 && result[i][j]===0 )
 		{
 			result[i][j]=1
 			filledSquares--;
-		}
+		}//else just try again this whole loop, we arent decrementing filled squares
 	}
 	return result;
 }
