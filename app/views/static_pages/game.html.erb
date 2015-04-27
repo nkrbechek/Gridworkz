@@ -14,9 +14,9 @@
 			var context = a_canvas.getContext("2d");
 				//draw
 				var leftX = 150;
-				var leftY = 100;
+				var leftY = 75;
 				var rightX = 700;
-				var rightY = 100;
+				var rightY = 75;
 				for(var i = 0; i < 3; i++){
 					leftX = 150;
 					rightX = 700;
@@ -40,6 +40,11 @@
 						context.closePath();
 						leftX = leftX + 100;
 						rightX = rightX + 100;
+
+						//instructions
+						context.font = "30px Arial";
+						context.fillText("Clockwise",500,200);
+						context.fillText("90 degrees",500,250);
 					}
 					leftY = leftY + 100;
 					rightY = rightY +100;
