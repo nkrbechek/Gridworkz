@@ -3,7 +3,8 @@
 
 body {
   padding-top: 60px;
-  resize: vertical
+  resize: vertical;
+  width: 100%;
 }
 
 section {
@@ -183,9 +184,10 @@ canvas{
 /* for the right grid */
 .grid { 
     border-collapse:collapse; 
-    display: inline-block;
+  
     margin-left: 900px;
     margin-top: 50px;
+
      }
 .grid td {
     cursor:pointer;
@@ -200,9 +202,9 @@ canvas{
 
 .grid1{  
     border-collapse:collapse; 
-    display: inline-block;
-    margin-left: -900px;
+    margin-left: 300px;
     margin-top: -300px;
+ 
      }
 .grid1 td {
     
