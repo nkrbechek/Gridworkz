@@ -84,35 +84,6 @@ p {
   text-decoration: none;
 }
 
-footer {
-    position: absolute;
-    bottom: 0px;
-    width: 50%;
-    border-top: 1px solid #eaeaea;
-    color: #777;
-}
-
-footer a {
-  color: #555;
-}
-
-footer a:hover {
-  color: #222;
-}
-
-footer small {
-  float: left;
-}
-
-footer ul {
-  float: right;
-  list-style: none;
-}
-
-footer ul li {
-  float: left;
-  margin-left: 15px;
-}
 @mixin box_sizing {
   -moz-box-sizing:    border-box;
   -webkit-box-sizing: border-box;
@@ -193,6 +164,8 @@ canvas{
     cursor:pointer;
     width:100px; height:100px;
     border:2px solid #000000;
+   
+
 }
 .grid td.clicked {
     background-color:blue;
@@ -210,4 +183,5 @@ canvas{
     
     width:100px; height:100px;
     border:2px solid #000000;
+    
 }
