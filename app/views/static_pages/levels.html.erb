@@ -1,60 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <link rel='stylesheet' type='text/css' href='custom.css.scss'/>
-</head>
-  <body> 
-    <script type="text/javascript">
-      var grid = clickableGrid(3,3,function(el,row,col,i){
-      if(el.className == '' || el.className == 'unclicked'){
-       el.className='clicked';}
-      else{
-        el.className ='unclicked';}
-      });
-      
-      var grid1 = staticGrid(3,3,function(el,row,col,i){
-        
-      });
-      
-      document.body.appendChild(grid);
-      document.body.appendChild(grid1);
-     
-      function clickableGrid( rows, cols, callback ){
-        var i=0;
-        var grid = document.createElement('table');
-        grid.className = 'grid';
-        for (var r=0;r<rows;++r){
-          var tr = grid.appendChild(document.createElement('tr'));
-          for (var c=0;c<cols;++c){
-            var cell = tr.appendChild(document.createElement('td'));
-            cell.addEventListener('click',(function(el,r,c,i){
-              return function(){
-                callback(el,r,c,i);
-                }
-            })(cell,r,c,i),false);
-          }
-        }
-        return grid;
-      }
-     function staticGrid( rows, cols, callback ){
-        var i=0;
-        var grid = document.createElement('table');
-        grid.className = 'grid1';
-        for (var r=0;r<rows;++r){
-          var tr = grid.appendChild(document.createElement('tr'));
-          for (var c=0;c<cols;++c){
-            var cell = tr.appendChild(document.createElement('td'));
-            cell.addEventListener('click',(function(el,r,c,i){
-              return function(){
-                callback(el,r,c,i);
-                }
-            })(cell,r,c,i),false);
-          }
-        }
-        return grid;
-      }
-      
-     
-    </script>
+<body>
+  
   </body>
  </html>

@@ -1,59 +1,63 @@
 <!DOCTYPE html>
-
 <html>
-	<head>
-		<title>Gridworkz</title>
-		<link rel='stylesheet' type='text/css' href='custom.css.scss'/>
-	</head>
- 	<body> 
- 		<canvas id="a" width="1100" height="600">
- 			This text is displayed if your browser does not support HTML5 Canvas.
- 		</canvas>
- 		<script >
- 			var a_canvas = document.getElementById("a");
-			var context = a_canvas.getContext("2d");
-				//draw
-				var leftX = 150;
-				var leftY = 75;
-				var rightX = 700;
-				var rightY = 75;
-				for(var i = 0; i < 3; i++){
-					leftX = 150;
-					rightX = 700;
-					for(var j = 0; j < 3; j++){
-						//left grid
-						context.stroke();
-						context.fillStyle = "black";
-						context.fill();
-						context.lineWidth = 2;
-						context.beginPath();
-						context.strokeRect(leftX, leftY, 100, 100);
-						context.closePath();
-
-						//right grid
-						context.stroke();
-						context.fillStyle = "black";
-						context.fill();
-						context.lineWidth = 2;
-						context.beginPath();
-						context.strokeRect(rightX, rightY, 100, 100);
-						context.closePath();
-						leftX = leftX + 100;
-						rightX = rightX + 100;
-
-						//instructions
-						context.font = "30px Arial";
-						context.fillText("Clockwise",500,200);
-						context.fillText("90 degrees",500,250);
-					}
-					leftY = leftY + 100;
-					rightY = rightY +100;
-				}
-				
-
-				//context.font = "30px Garamond";
-				//context.fillText("Hello, World!",15,175);
-
- 		</script> 	
- 	</body>
-</html>
+<head>
+  <link rel='stylesheet' type='text/css' href='custom.css.scss'/>
+</head>
+  
+  <body> 
+    <script type="text/javascript">
+      
+      var grid = clickableGrid(3,3,function(el,row,col,i){
+      if(el.className == '' || el.className == 'unclicked'){
+       el.className='clicked';}
+      else{
+        el.className ='unclicked';}
+      });
+      
+      var grid1 = staticGrid(3,3,function(el,row,col,i){
+        
+      });
+      
+      document.body.appendChild(grid);
+      document.body.appendChild(grid1);
+     	
+      function clickableGrid( rows, cols, callback ){
+        var i=0;
+        var grid = document.createElement('table');
+        grid.className = 'grid';
+        for (var r=0;r<rows;++r){
+          var tr = grid.appendChild(document.createElement('tr'));
+          for (var c=0;c<cols;++c){
+            var cell = tr.appendChild(document.createElement('td'));
+            cell.addEventListener('click',(function(el,r,c,i){
+              return function(){
+                callback(el,r,c,i);
+                }
+            })(cell,r,c,i),false);
+          }
+        }
+        return grid;
+      }
+     function staticGrid( rows, cols, callback ){
+        var i=0;
+        var grid = document.createElement('table');
+        grid.className = 'grid1';
+        for (var r=0;r<rows;++r){
+          var tr = grid.appendChild(document.createElement('tr'));
+          for (var c=0;c<cols;++c){
+            var cell = tr.appendChild(document.createElement('td'));
+            cell.addEventListener('click',(function(el,r,c,i){
+              return function(){
+                callback(el,r,c,i);
+                }
+            })(cell,r,c,i),false);
+          }
+        }
+        return grid;
+      }
+      
+      
+     
+    </script>
+     </body>
+ </html>

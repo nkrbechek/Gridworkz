@@ -47,7 +47,7 @@ h3{
   color: #777;
 }
 h4{
-  font-size: 2em;
+  font-size: 1em;
   text-align:center;
   
 }
@@ -56,12 +56,14 @@ h5{
   font-size: 2em;
   text-align:center;
   }
-
+  
 p {
   font-size: 1.1em;
   line-height: 1.7em;
   text-align: center;
 }
+
+
 
 #logo {
   float: left;
@@ -176,10 +178,10 @@ aside {
 canvas{
   
 }
-/* for the clickable grid */
+/* for the right grid */
 .grid {  
-    margin-left: 78em;
-    margin-top: 5em;
+    margin-left: 900px;
+    margin-top: 50px;
      }
 .grid td {
     cursor:pointer;
@@ -190,9 +192,11 @@ canvas{
     background-color:blue;
     
 }
+/*for the left grid */
+
 .grid1{  
-    margin-left: 35em;
-    margin-top: -21.5em;
+    margin-left: 360px;
+    margin-top: -300px;
      }
 .grid1 td {
     
