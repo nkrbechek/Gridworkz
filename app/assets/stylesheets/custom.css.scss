@@ -56,7 +56,7 @@ h5{
   font-size: 2em;
   text-align:center;
   }
-  
+
 p {
   font-size: 1.1em;
   line-height: 1.7em;
@@ -179,7 +179,9 @@ canvas{
   
 }
 /* for the right grid */
-.grid {  
+.grid { 
+    border-collapse:collapse; 
+    display: inline-block;
     margin-left: 900px;
     margin-top: 50px;
      }
@@ -195,7 +197,9 @@ canvas{
 /*for the left grid */
 
 .grid1{  
-    margin-left: 360px;
+    border-collapse:collapse; 
+    display: inline-block;
+    margin-left: -900px;
     margin-top: -300px;
      }
 .grid1 td {
