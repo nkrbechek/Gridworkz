@@ -182,20 +182,44 @@ function cornerSides(gridsize)
 
 function sepSides(gridsize)
 {
-	
+	var result = initialize(gridsize);	
 }
 
 function sepCorners(gridsize)
 {
-	
+	var result = initialize(gridsize);	
 }
 
 function sepMixed(gridsize)
 {
-	
+	var result = initialize(gridsize);
 }
 
 function islands(gridsize)
 {
+	var result = initialize(gridsize);
+	var filledSquares=Math.floor(gridsize*gridsize/3)-1;//30% rounded down -first point
+	var starti = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+	var startj = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+		result[starti][startj]=1;
+	while(filledSquares!==0)	//fillin squares
+	{
+		starti = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+		startj = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 
+		var ok=true;
+
+		if(result[starti+1][startj]===1 || result[starti+1][startj-1]===1 ||result[starti+1][startj+1]===1)
+			{ok=false;}  
+		if(result[starti][startj]===1 || result[starti][startj-1]===1 || result[starti][startj+1]===1 )
+			{ok=false;}
+		if(result[starti-1][startj]===1 || result[starti-1][startj-1]===1 ||result[starti-1][startj+1]===1)
+			{ok=false;}
+	
+		if(ok===true)
+		{
+			filledSquares--;
+			result[starti][startj]=1;
+		}
+	}
 }
