@@ -10,11 +10,11 @@
 </script>
 </div>
   <body> 
-    <input type="button" name="button1" value="Done" style="position: absolute; left: 650px; top: 300px; width: 200px; " onclick="window.location='game'" />
+    <input type="button" name="button1" value="Done" style="position: absolute; left: 650px; top: 300px; width: 200px; " onclick="getInterval(initialTime)" />
     <script type="text/javascript">
     /*the array of the given grid*/
        //var givenGrid = /*to be assigned from functions*/
-
+		var initialTime=getTime();
       /*the array of instructions that will be randomly choosen*/
       var instructions = ["Clockwise 90", "Counter-Clockwise 90", "Clockwise 180", "Counter-Clockwise 180", "Clockwise 270", "Counter-Clockwise 270"];
       /* function to make the clickable grid and to determine what happens when the block is clicked */
@@ -35,6 +35,12 @@
       document.body.appendChild(grid1);
 
 
+	/*function that getsNewTime */
+	function getInterval(oldtime)
+	{
+		var time=getTime();
+		return time-oldtime;
+	}
 
      /* function that builds the clickable grid*/
       function clickableGrid( rows, cols, callback ){
