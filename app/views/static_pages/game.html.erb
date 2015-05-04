@@ -16,17 +16,17 @@
     <script type="text/javascript">
     
 		//var initialTime=getTime();
-     // var playerGrid = playersGrid(3);
-      //var pg = convert(playerGrid);
+    
+    
       /* function to make the clickable grid and to determine what happens when the block is clicked */
       var grid = clickableGrid(3,3,function(el,row,col,i){
       if(el.className == '' || el.className == 'unclicked'){
        el.className='clicked';
-       playerGrid[row][col] = 1;
+       
         }
       else{
         el.className ='unclicked';
-        playerGrid[row][col] = 0;
+        
       }
       });
       /*mkaes the given grid*/
@@ -40,25 +40,19 @@
       document.body.appendChild(grid1);
 
 function done(){
-  //var pg = document.getElementsByTagName("pg");
-  alert("done");
- /* if(pg[0] ==1){
-    alert("done");
-  }
-  else{
-    alert("not done");
-  }*/
+  
+  alert(done);
   
 }
 function playersGrid(size){
-  var playergrid = new array;
+  var pg = new array;
   for(var i = 0; i<size; i++){
-    playergrid[i] = new array;
+    pg[i] = new array;
     for(var j = 0; j<size; j++){
-      playergrid[i][j] = 0;
+      pg[i][j] = 0;
     }
   }
-  return playergrid;
+  return pg;
 }
 	/*function that getsNewTime */
   function getInterval(oldtime)
