@@ -253,10 +253,10 @@ function sepSides(gridsize)//Ill make two islands
 		{
 			case 0:
 				if(filledSquares%2===0)
-			 		tempi=ai-1;
+					tempi=ai-1;
 				else
 					tempi=bi-1;
-			 	break;
+				break;
 			case 1:
 				if(filledSquares%2===0)
 					tempi=aj+1;
@@ -296,14 +296,170 @@ function sepSides(gridsize)//Ill make two islands
 
 function sepCorners(gridsize)
 {
-	var result = initialize(gridsize);	
+	
+	var resulta=initialize(gridsize);
+	var resultb=initialize(gridsize);
+
+	var filledSquares=Math.floor(gridsize*gridsize/3)-1;//30% rounded down -first point
+	
+	var ai = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+	var aj = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+		result[ai][aj]='a';
+	var bi = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+	var bj = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+	
+	//making sure sepperate start pts
+	while(doNotTouch(ai,aj,bi,bj)!==true)
+	{
+		bi = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+		bj = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+	}
+	
+	while(filledSquares>0)
+	{
+		var direction=Math.floor(Math.random()*4);
+		//0->i--, 1->i++, 2->j--, 3->j++;
+		var tempi;
+		var tempj;
+		switch(direction)
+		{
+			case 0:
+				if(filledSquares%2===0)
+					{tempi=ai-1; tempj=aj-1;}
+				else
+					{tempi=bi-1; tempj=bj-1;}
+			 	break;
+			case 1:
+				if(filledSquares%2===0)
+					{tempi=aj+1; tempj=ai+1;}
+				else
+					{tempi=bi+1; tempj=bj+1;}
+				break;
+			case 2:
+				if(filledSquares%2===0)
+					{tempj=aj-1; tempi=ai+1;}
+				else
+					{tempj=bj-1; tempi=bi+1;}
+				break;
+			case 3:
+				if(filledSquares%2===0)
+					{tempj=aj+1; tempi=ai-1;}
+				else
+					{tempj=bj+1; tempi=ai-1;}
+					
+				break;
+			default:
+				console.log('something went wrong');
+				break;
+		}//end switch case
+		if(filledSquares%2===0 && doesNotTouchGroup(tempi,tempj,resultb) )//we came from a
+		{
+			resulta[i][j]=1;
+			filledSquares--;
+		}
+		   if(filledSquares%2!==0 && doesNotTouchGroup(tempi,tempj,resulta) )//we came from b
+		{
+			resultb[i][j]=1;
+			filledSquares--;
+		}
+	}
+	return mergeArs(resulta,resultb,gridsize);
 }
 
 function sepMixed(gridsize)
 {
-	var result = initialize(gridsize);
-}
+	var resulta=initialize(gridsize);
+	var resultb=initialize(gridsize);
 
+	var filledSquares=Math.floor(gridsize*gridsize/3)-1;//30% rounded down -first point
+	
+	var ai = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+	var aj = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+		result[ai][aj]='a';
+	var bi = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+	var bj = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+	
+	//making sure sepperate start pts
+	while(doNotTouch(ai,aj,bi,bj)!==true)
+	{
+		bi = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+		bj = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+	}
+	
+	while(filledSquares>0)
+	{
+		var direction=Math.floor(Math.random()*8);
+		//0->i--, 1->i++, 2->j--, 3->j++;
+		var tempi;
+		var tempj;
+		switch(direction)
+		{
+			case 0:
+				if(filledSquares%2===0)
+					{tempi=ai-1; tempj=aj-1;}
+				else
+					{tempi=bi-1; tempj=bj-1;}
+			 	break;
+			case 1:
+				if(filledSquares%2===0)
+					{tempi=aj+1; tempj=ai+1;}
+				else
+					{tempi=bi+1; tempj=bj+1;}
+				break;
+			case 2:
+				if(filledSquares%2===0)
+					{tempj=aj-1; tempi=ai+1;}
+				else
+					{tempj=bj-1; tempi=bi+1;}
+				break;
+			case 3:
+				if(filledSquares%2===0)
+					{tempj=aj+1; tempi=ai-1;}
+				else
+					{tempj=bj+1; tempi=ai-1;}
+				break;
+			case 4:
+				if(filledSquares%2===0)
+					tempi=ai-1;
+				else
+					tempi=bi-1;
+				break;
+			case 5:
+				if(filledSquares%2===0)
+					tempi=aj+1;
+				else
+					tempi=bj+1;
+				break;
+			case 6:
+				if(filledSquares%2===0)
+					tempj=aj-1;
+				else
+					tempj=bj-1;
+				break;
+			case 7:
+				if(filledSquares%2===0)
+					tempj=aj+1;
+				else
+					tempj=bj+1;
+					
+				break;
+			default:
+				console.log('something went wrong');
+				break;
+		}//end switch case
+		if(filledSquares%2===0 && doesNotTouchGroup(tempi,tempj,resultb) )//we came from a
+		{
+			resulta[i][j]=1;
+			filledSquares--;
+		}
+		   if(filledSquares%2!==0 && doesNotTouchGroup(tempi,tempj,resulta) )//we came from b
+		{
+			resultb[i][j]=1;
+			filledSquares--;
+		}
+	}
+	return mergeArs(resulta,resultb,gridsize);
+}
 
 function islands(gridsize)
 {
