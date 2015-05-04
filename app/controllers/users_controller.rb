@@ -2,6 +2,9 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
   end
+  def index
+    gon.name = name
+  end
   def new
   	@user = User.new
   	def create
@@ -21,5 +24,5 @@ end
       params.require(:user).permit(:name, :age, :gender, :password,
                                    :password_confirmation)
     end
-  
+ 
 end

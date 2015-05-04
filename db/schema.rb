@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150424065754) do
+ActiveRecord::Schema.define(version: 20150504053533) do
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(version: 20150424065754) do
     t.datetime "updated_at",      null: false
     t.string   "password_digest"
     t.string   "remember_digest"
+    t.integer  "levelNum"
+    t.integer  "speedup"
+    t.integer  "corrRow"
+    t.integer  "gridSize"
+    t.integer  "levelType"
+    t.string   "color"
+    t.integer  "group"
+    t.integer  "attempts"
+    t.string   "levelData"
+    t.integer  "totalCorrect"
   end
 
   add_index "users", ["name"], name: "index_users_on_name", unique: true

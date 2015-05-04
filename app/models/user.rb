@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   validates :gender, presence: true, length: { maximum: 1 }
   has_secure_password
   validates :password, length: { minimum: 6 }
+  after_initialize :init
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
                                                   BCrypt::Engine.cost
@@ -27,5 +28,16 @@ class User < ActiveRecord::Base
   # Forgets a user.
   def forget
     update_attribute(:remember_digest, nil)
+  end
+  def init
+    self.levelNum ||= 1
+    self.speedup ||=1
+    self.corrRow ||=0
+    self.gridSize ||= 3
+    self.levelType ||= 0
+    self.color ||= "blue"
+    self.group ||= 0+rand(2)
+    self.attempts ||=0
+    self.totalCorrect ||=0
   end
 end
