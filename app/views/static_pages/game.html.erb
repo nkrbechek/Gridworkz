@@ -90,6 +90,7 @@
 		return doubleArray.join().split(",");
       }
 
+ 
       var da = block(3);
       var arrToConvert = [[0,0,1],[1,0,0],[0,1,0]];
       /*call to convert double array to single array*/
@@ -129,7 +130,32 @@
 		}//end outer for loop
 		return result;
 	}
-	
+	     /*function that solves the level*/
+      function solver(rows, instruction, givenSquare){
+      	var solvedSquare = new array;
+      	if((instruction[0]== "clockwise" && instruction[1] == "90")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "270")){
+			for(var i = 0; i<rows; i++){
+				solvedSquare[i] = new array;
+				for(var j = 0; j<rows; j++){
+					solvedSquare[rows-1-j][i] = givenSquare[i][j];	
+	    	}}}
+		else if((instruction[0]== "clockwise"&& instruction[1] == 180)||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "180")){
+			for(var i = 0; i<rows; i++){
+				solvedSquare[i] = new array;
+				for(var j = 0; j<rows; j++){
+					solvedSquare[rows-1-i][rows-1-j] = givenSquare[i][j];
+					
+	    	}}}
+		else if((instruction[0]== "clockwise"&& instruction[1] == "270")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "90")){
+			for(var i = 0; i<rows; i++){
+				solvedSquare[i] = new array;
+				for(var j = 0; j<rows; j++){
+					solvedSquare[j][rows-1-i] = givenSquare[i][j];
+	    	}}}
+		return solvedSquare;
+
+}
+
       /*
       function instructions(){
 	
