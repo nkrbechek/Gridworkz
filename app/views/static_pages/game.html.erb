@@ -17,16 +17,16 @@
     
 		//var initialTime=getTime();
     
-    
+      var player = initialize(3);
       /* function to make the clickable grid and to determine what happens when the block is clicked */
       var grid = clickableGrid(3,3,function(el,row,col,i){
       if(el.className == '' || el.className == 'unclicked'){
        el.className='clicked';
-       
+       player[row][col] = 1; 
         }
       else{
         el.className ='unclicked';
-        
+        player[row][col] = 0;
       }
       });
       /*mkaes the given grid*/
@@ -39,21 +39,61 @@
       document.body.appendChild(grid);
       document.body.appendChild(grid1);
 
-function done(){
-  
-  alert(done);
-  
-}
-function playersGrid(size){
-  var pg = new array;
-  for(var i = 0; i<size; i++){
-    pg[i] = new array;
-    for(var j = 0; j<size; j++){
-      pg[i][j] = 0;
+      var da = block(3);
+      /*call to convert double array to single array*/
+      var newar = convert(da);
+      /*fills squares based on grid generated into an array*/
+      var filled = fill(newar);
+      var inst = ["Clockwise", "90"];
+      var solved = solver(3, inst, da);
+      
+    
+    function done(){//TODO: write empty grid function
+      var temp = arraysIdentical(3,solved,player);
+      if(temp){
+      var emp = empty(18);
+      player = initialize(3);
+      document.body.removeChild(grid);
+      document.body.removeChild(grid1);
+      grid = clickableGrid(3,3,function(el,row,col,i){
+      if(el.className == '' || el.className == 'unclicked'){
+       el.className='clicked';
+        player[row][col] = 1; 
+        }
+      else{
+        el.className ='unclicked';
+        player[row][col] = 0; 
+      }
+      });
+      document.body.appendChild(grid);
+      document.body.appendChild(grid1);
+      da = block(3);
+      /*call to convert double array to single array*/
+      newar = convert(da);
+      /*fills squares based on grid generated into an array*/
+      filled = fill(newar);
+      solved = solver(3, inst, da);
     }
-  }
-  return pg;
+    else{
+        alert("Not quite. Try again!");
+    }
+  
+  
 }
+
+  function arraysIdentical(size, a, b) {
+    var i = 0;
+    var j = 0;
+    for(i; i<size; i++){
+      for(j; j<size; j++){
+        if(a[i][j]!=b[i][j]){
+          return false;
+        }
+      }
+    }
+    return true;
+    }
+
 	/*function that getsNewTime */
   function getInterval(oldtime)
   {
@@ -83,6 +123,7 @@ function playersGrid(size){
       }
 
 
+
       /*fucntion that builds given grid*/
      function staticGrid( rows, cols, callback ){
         var i=0;
@@ -101,6 +142,7 @@ function playersGrid(size){
         }
         return grid;
       }
+
       /*fucntion that fills in the squares of the given grid*/
       function fill(fill){
       	var td = document.getElementsByTagName("td");
@@ -109,9 +151,20 @@ function playersGrid(size){
       	for(i; i<size; i++){
       		if(fill[i] == 1){
       			td[tds-size+i].setAttribute("style","background:green;");
-      		}
-      	}
+        }
       }
+    }
+      /*function that clears grids*/
+      function empty(size){
+        var td = document.getElementsByTagName("td");
+        var i = 0, tds = td.length;
+        for(i; i<tds; i++){
+            td[i].setAttribute("style","background:white;");
+
+          
+        }
+      }
+
 
       /*function that converts a 2-d array to a single array*/
       function convert(doubleArray){
@@ -119,37 +172,30 @@ function playersGrid(size){
       }
 
  
-      var da = block(3);
-      /*call to convert double array to single array*/
-      var newar = convert(da);
-      /*fills squares based on grid generated into an array*/
-      var filled = fill(newar);
+
       
     
 	     /*function that solves the level*/
       function solver(rows, instruction, givenSquare){
-      	var solvedSquare = new array;
+      	var solvedSquare = initialize(rows);
       	if((instruction[0]== "Clockwise" && instruction[1] == "90")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "270")){
-			for(var i = 0; i<rows; i++){
-				solvedSquare[i] = new array;
+			 for(var i = 0; i<rows; i++){
 				for(var j = 0; j<rows; j++){
-					solvedSquare[rows-1-j][i] = givenSquare[i][j];	
+						
+          solvedSquare[j][rows-1-i] = givenSquare[i][j];
 	    	}}}
-		else if((instruction[0]== "Clockwise"&& instruction[1] == 180)||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "180")){
+	   	else if((instruction[0]== "Clockwise"&& instruction[1] == 180)||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "180")){
 			for(var i = 0; i<rows; i++){
-				solvedSquare[i] = new array;
 				for(var j = 0; j<rows; j++){
 					solvedSquare[rows-1-i][rows-1-j] = givenSquare[i][j];
 					
 	    	}}}
-		else if((instruction[0]== "Clockwise"&& instruction[1] == "270")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "90")){
+		  else if((instruction[0]== "Clockwise"&& instruction[1] == "270")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "90")){
 			for(var i = 0; i<rows; i++){
-				solvedSquare[i] = new array;
 				for(var j = 0; j<rows; j++){
-					solvedSquare[j][rows-1-i] = givenSquare[i][j];
+					solvedSquare[rows-1-j][i] = givenSquare[i][j];
 	    	}}}
-		return solvedSquare;
-
+		  return solvedSquare;
 		}
 
 	  //returns an array of instruction 
@@ -164,6 +210,124 @@ function playersGrid(size){
 		instruction[1] = degree[randomDegree];
 		return instruction;
    }
+   function initialize(gridsize)
+{ 
+  //alert("In initialize");
+  var result = new Array();
+  for (var i = 0; i <gridsize; i++) 
+  {
+    result[i]=new Array();
+    for (var j = 0; j <gridsize; j++) 
+    {     
+      result[i][j]=0; 
+    }//end inner for loop
+  }//end outer for loop
+  //alert("done initialising");
+  //alert(result);
+  return result;
+}
+
+   function corners(gridsize)
+{
+  var result = initialize(gridsize);
+  var filledSquares=Math.floor(gridsize*gridsize/3)-1;//30% rounded down -first point
+  var starti = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+  var startj = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+    result[starti][startj]=1;
+  var tempi=starti;
+  var tempj=startj; 
+  while(filledSquares!==0)  //fill in squares
+  {
+    var direction=Math.floor(Math.random()*4);
+    //0->i--, 1->i++, 2->j--, 3->j++; pick a random direction to go
+
+    switch(direction)
+    {
+      case 0:
+        tempi=starti-1; tempj=startj-1;
+        break;
+      case 1:
+        tempi=starti+1; tempj=startj+1;
+        break;
+      case 2:
+        tempj=startj-1; tempi=starti+1;
+        break;
+      case 3:
+        tempj=startj+1; tempi=starti-1;
+        break;
+      default:
+       // console.log('something went wrong');
+        break;
+    }//end switch case
+   // console.log("printing i%i then j%i",tempi,tempj);
+  
+    if(tempi<gridsize && tempj<gridsize && tempi>=0 && tempj>=0)//not out of bounds && 
+    {
+     // console.log("not out of bounds");
+      if(result[tempi][tempj]==0)//we arent refillling something filled
+      {
+       // console.log("we arent refillling anything");
+          if(corneredCorners(tempi,tempj,gridsize,result)==1)
+          {
+            result[tempi][tempj]=1;
+            filledSquares--;
+            starti = tempi;
+            startj = tempj;
+           // console.log("decrementing in corners printing i%i and j%i",tempi,tempj);
+          }
+      }
+    }
+    //else
+    //{
+      //if(direction===0)
+      //{filledSquares--;}
+  //  }
+  }//end loop
+  console.log("exited while loop of corners, returning");
+  console.log(result);
+  return result;  
+}
+function corneredCorners(i,j,gridsize,grid)//TODO: finish this and corneredMix
+//called: coneredCorners(tempi, tempj, gridsize, grid)
+{
+  var result;
+  if(i==0 || j==0 || i==gridsize-1 ||j==gridsize-1)
+  //are we in a literal corner of a grid only one place to go
+  {
+   // console.log("corner case");
+    if(i==0 && j==0)//only increase
+    {
+      if(grid[i+1][j+1]==1)
+        result = 1;
+    }
+    if (i==0 &&j==gridsize-1) 
+    {
+      if(grid[i+1][j-1]==1)
+        result = 1;
+    }
+    if(i==gridsize-1 && j==0)
+    {
+      if(grid[i-1][j+1]==1)
+        result = 1;
+    }
+    if(i==gridsize && j==gridsize)
+    {
+      if(grid[i-1][j-1]==1)
+        result = 1;
+    }
+  }
+  else
+  {
+    //console.log("normal case")
+    if(grid[i+1][j+1]==1 || grid[i+1][j-1]==1 || grid[i-1][j+1]==1 || grid[i-1][j-1]==1)
+      {result = 1;}
+    else{
+    result = 0;}
+  }
+  //console.log("result :",result);
+  return result;
+}
+
       	function block(gridsize)
 	{
 		var result = new Array();
