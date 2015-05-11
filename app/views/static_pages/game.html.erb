@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,8 +6,8 @@
   <h1>
 
 <script>
-	var instructions = ["Clockwise 90", "Counter-Clockwise 90", "Clockwise 180", "Counter-Clockwise 180", "Clockwise 270", "Counter-Clockwise 270"];
-	document.write(instructions[0].bold());
+  var instructions = ["Clockwise 90", "Counter-Clockwise 90", "Clockwise 180", "Counter-Clockwise 180", "Clockwise 270", "Counter-Clockwise 270"];
+  document.write(instructions[0].bold());
   
 </script>
 </h1>
@@ -16,7 +15,7 @@
     <input type="button" name="button1" value="Done" style="position: absolute; left: 650px; top: 300px; width: 200px; " onclick="done()" />
     <script type="text/javascript">
     
-		//var initialTime=getTime();
+    //var initialTime=getTime();
     
       var player = initialize(3);
       /* function to make the clickable grid and to determine what happens when the block is clicked */
@@ -95,14 +94,14 @@
     return true;
     }
 
-	/*function that getsNewTime */
+  /*function that getsNewTime */
   function getInterval(oldtime)
   {
 
-		var time=getTime();
-		return time-oldtime;
+    var time=getTime();
+    return time-oldtime;
 
-	}
+  }
 
      /* function that builds the clickable grid*/
       function clickableGrid( rows, cols, callback ){
@@ -133,7 +132,7 @@
         for (var r=0;r<rows;++r){
           var tr = grid.appendChild(document.createElement('tr'));
           for (var c=0;c<cols;++c){
-          		var cell = tr.appendChild(document.createElement('td'));            
+              var cell = tr.appendChild(document.createElement('td'));            
             cell.addEventListener('click',(function(el,r,c,i){
               return function(){
                 callback(el,r,c,i);
@@ -146,12 +145,12 @@
 
       /*fucntion that fills in the squares of the given grid*/
       function fill(fill){
-      	var td = document.getElementsByTagName("td");
-      	var size = fill.length;
-      	var i = 0, tds = td.length;
-      	for(i; i<size; i++){
-      		if(fill[i] == 1){
-      			td[tds-size+i].setAttribute("style","background:green;");
+        var td = document.getElementsByTagName("td");
+        var size = fill.length;
+        var i = 0, tds = td.length;
+        for(i; i<size; i++){
+          if(fill[i] == 1){
+            td[tds-size+i].setAttribute("style","background:green;");
         }
       }
     }
@@ -169,47 +168,47 @@
 
       /*function that converts a 2-d array to a single array*/
       function convert(doubleArray){
-		return doubleArray.join().split(",");
+    return doubleArray.join().split(",");
       }
 
  
 
       
     
-	     /*function that solves the level*/
+       /*function that solves the level*/
       function solver(rows, instruction, givenSquare){
-      	var solvedSquare = initialize(rows);
-      	if((instruction[0]== "Clockwise" && instruction[1] == "90")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "270")){
-			 for(var i = 0; i<rows; i++){
-				for(var j = 0; j<rows; j++){
-						
+        var solvedSquare = initialize(rows);
+        if((instruction[0]== "Clockwise" && instruction[1] == "90")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "270")){
+       for(var i = 0; i<rows; i++){
+        for(var j = 0; j<rows; j++){
+            
           solvedSquare[j][rows-1-i] = givenSquare[i][j];
-	    	}}}
-	   	else if((instruction[0]== "Clockwise"&& instruction[1] == 180)||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "180")){
-			for(var i = 0; i<rows; i++){
-				for(var j = 0; j<rows; j++){
-					solvedSquare[rows-1-i][rows-1-j] = givenSquare[i][j];
-					
-	    	}}}
-		  else if((instruction[0]== "Clockwise"&& instruction[1] == "270")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "90")){
-			for(var i = 0; i<rows; i++){
-				for(var j = 0; j<rows; j++){
-					solvedSquare[rows-1-j][i] = givenSquare[i][j];
-	    	}}}
-		  return solvedSquare;
-		}
+        }}}
+      else if((instruction[0]== "Clockwise"&& instruction[1] == 180)||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "180")){
+      for(var i = 0; i<rows; i++){
+        for(var j = 0; j<rows; j++){
+          solvedSquare[rows-1-i][rows-1-j] = givenSquare[i][j];
+          
+        }}}
+      else if((instruction[0]== "Clockwise"&& instruction[1] == "270")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "90")){
+      for(var i = 0; i<rows; i++){
+        for(var j = 0; j<rows; j++){
+          solvedSquare[rows-1-j][i] = givenSquare[i][j];
+        }}}
+      return solvedSquare;
+    }
 
-	  //returns an array of instruction 
+    //returns an array of instruction 
     
       function instructions(){
-		var rotation = ["Clockwise", "Counter-Clockwise"];
-		var degree = ["90","180","270"];
-		var randomRotation=Math.floor(Math.random()*2);//0-1
-		var randomDegree = Math.floor(Math.random()*3);//0-2
-		var instruction = new array;
-		instruction[0] = rotation[randomRotation];
-		instruction[1] = degree[randomDegree];
-		return instruction;
+    var rotation = ["Clockwise", "Counter-Clockwise"];
+    var degree = ["90","180","270"];
+    var randomRotation=Math.floor(Math.random()*2);//0-1
+    var randomDegree = Math.floor(Math.random()*3);//0-2
+    var instruction = new array;
+    instruction[0] = rotation[randomRotation];
+    instruction[1] = degree[randomDegree];
+    return instruction;
    }
    function initialize(gridsize)
 { 
@@ -329,211 +328,36 @@ function corneredCorners(i,j,gridsize,grid)//TODO: finish this and corneredMix
   return result;
 }
 
-      	function block(gridsize)
-	{
-		var result = new Array();
-		var row=Math.floor(Math.random()*2);//0-1
-		var rowNumber = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
-		for (var i = 0; i <gridsize; i++) 
-		{
-			result[i]=new Array();
-			for (var j = 0; j <gridsize; j++) 
-			{  		
-				if(row==1)//row not column
-				{
-					if(j==rowNumber)
-						{ result[i][j]=1; } 
-					else
-						{ result[i][j]=0; }  			
-				}//end row
-				else//column
-				{
-					if(i==rowNumber)
-					{ result[i][j]=1; }
-					else
-					{ result[i][j]=0; }
-				}//end column
-			}//end inner for loop
-		}//end outer for loop
-		return result;
-	}
+        function block(gridsize)
+  {
+    var result = new Array();
+    var row=Math.floor(Math.random()*2);//0-1
+    var rowNumber = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+    for (var i = 0; i <gridsize; i++) 
+    {
+      result[i]=new Array();
+      for (var j = 0; j <gridsize; j++) 
+      {     
+        if(row==1)//row not column
+        {
+          if(j==rowNumber)
+            { result[i][j]=1; } 
+          else
+            { result[i][j]=0; }       
+        }//end row
+        else//column
+        {
+          if(i==rowNumber)
+          { result[i][j]=1; }
+          else
+          { result[i][j]=0; }
+        }//end column
+      }//end inner for loop
+    }//end outer for loop
+    return result;
+  }
      
     </script>
     <%=image_tag("uprightSmiley.png", class: "smiley", alt:"smiley") %>
      </body>
-
-     	
- 
-=======
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel='stylesheet' type='text/css' href='custom.css.scss'/>
-</head>
-  <div style="position:absolute;right:-1000;bottom:500">
-<script>
-	var instructions = ["Clockwise 90", "Counter-Clockwise 90", "Clockwise 180", "Counter-Clockwise 180", "Clockwise 270", "Counter-Clockwise 270"];
-	document.write(instructions[1].bold());
-</script>
-</div>
-  <body> 
-    <input type="button" name="button1" value="Done" style="position: absolute; left: 650px; top: 300px; width: 200px; " onclick="window.location='game'" />
-    
-    <script type="text/javascript">
-    /*the array of the given grid*/
-       //var givenGrid = /*to be assigned from functions*/
-
-      /*the array of instructions that will be randomly choosen*/
-      var instructions = ["Clockwise 90", "Counter-Clockwise 90", "Clockwise 180", "Counter-Clockwise 180", "Clockwise 270", "Counter-Clockwise 270"];
-      /* function to make the clickable grid and to determine what happens when the block is clicked */
-      var grid = clickableGrid(3,3,function(el,row,col,i){
-      if(el.className == '' || el.className == 'unclicked'){
-       el.className='clicked';}
-      else{
-        el.className ='unclicked';}
-      });
-      /*mkaes the given grid*/
-      var grid1 = staticGrid(3,3,function(el,row,col,i){
-
-      });
-
-
-      /*adds the grids to the page*/
-      document.body.appendChild(grid);
-      document.body.appendChild(grid1);
-
-
-
-     /* function that builds the clickable grid*/
-      function clickableGrid( rows, cols, callback ){
-        var i=0;
-        var grid = document.createElement('table');
-        grid.className = 'grid';
-        for (var r=0;r<rows;++r){
-          var tr = grid.appendChild(document.createElement('tr'));
-          for (var c=0;c<cols;++c){
-            var cell = tr.appendChild(document.createElement('td'));
-            cell.addEventListener('click',(function(el,r,c,i){
-              return function(){
-                callback(el,r,c,i);
-                }
-            })(cell,r,c,i),false);
-          }
-        }
-        return grid;
-      }
-
-
-      /*fucntion that builds given grid*/
-     function staticGrid( rows, cols, callback ){
-        var i=0;
-        var grid = document.createElement('table');
-        grid.className = 'grid1';
-        for (var r=0;r<rows;++r){
-          var tr = grid.appendChild(document.createElement('tr'));
-          for (var c=0;c<cols;++c){
-          		var cell = tr.appendChild(document.createElement('td'));            
-            cell.addEventListener('click',(function(el,r,c,i){
-              return function(){
-                callback(el,r,c,i);
-                }
-            })(cell,r,c,i),false);
-          }
-        }
-        return grid;
-      }
-      /*fucntion that fills in the squares of the given grid*/
-      function fill(fill){
-      	var td = document.getElementsByTagName("td");
-      	var size = fill.length;
-      	var i = 0, tds = td.length;
-      	for(i; i<size; i++){
-      		if(fill[i] == 1){
-      			td[tds-size+i].setAttribute("style","background:green;");
-      		}
-      	}
-      }
-
-      /*function that converts a 2-d array to a single array*/
-      function convert(doubleArray){
-		return doubleArray.join().split(",");
-      }
-
- 
-      var da = block(3);
-      var arrToConvert = [[0,0,1],[1,0,0],[0,1,0]];
-      /*call to convert double array to single array*/
-      var newar = convert(da);
-      var ar = [0,0,1,1,0,0,0,1,0];
-      /*fills squares based on grid generated into an array*/
-      var filled = fill(newar);
-      
-     
-
-
-	function block(gridsize)
-	{
-		var result = new Array();
-		var row=Math.floor(Math.random()*2);//0-1
-		var rowNumber = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
-		for (var i = 0; i <gridsize; i++) 
-		{
-			result[i]=new Array();
-			for (var j = 0; j <gridsize; j++) 
-			{  		
-				if(row==1)//row not column
-				{
-					if(j==rowNumber)
-						{ result[i][j]=1; } 
-					else
-						{ result[i][j]=0; }  			
-				}//end row
-				else//column
-				{
-					if(i==rowNumber)
-					{ result[i][j]=1; }
-					else
-					{ result[i][j]=0; }
-				}//end column
-			}//end inner for loop
-		}//end outer for loop
-		return result;
-	}
-	     /*function that solves the level*/
-      function solver(rows, instruction, givenSquare){
-      	var solvedSquare = new array;
-      	if((instruction[0]== "clockwise" && instruction[1] == "90")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "270")){
-			for(var i = 0; i<rows; i++){
-				solvedSquare[i] = new array;
-				for(var j = 0; j<rows; j++){
-					solvedSquare[rows-1-j][i] = givenSquare[i][j];	
-	    	}}}
-		else if((instruction[0]== "clockwise"&& instruction[1] == 180)||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "180")){
-			for(var i = 0; i<rows; i++){
-				solvedSquare[i] = new array;
-				for(var j = 0; j<rows; j++){
-					solvedSquare[rows-1-i][rows-1-j] = givenSquare[i][j];
-					
-	    	}}}
-		else if((instruction[0]== "clockwise"&& instruction[1] == "270")||(instruction[0]== "Counter-Clockwise"&& instruction[1] == "90")){
-			for(var i = 0; i<rows; i++){
-				solvedSquare[i] = new array;
-				for(var j = 0; j<rows; j++){
-					solvedSquare[j][rows-1-i] = givenSquare[i][j];
-	    	}}}
-		return solvedSquare;
-
-}
-
-      /*
-      function instructions(){
-	
-
-
-      }
-      
-     */
-    </script>
-    <%=image_tag("uprightSmiley.png", class: "smiley", alt:"smiley") %>
-     </body>
- </html>
+     </html>
