@@ -1,1 +1,1 @@
-alert(gon.name)
+document.write(gon.test)

@@ -4,10 +4,12 @@
   <link rel='stylesheet' type='text/css' href='custom.css.scss'/>
 </head>
   <h1>
-
 <script>
   var instructions = ["Clockwise 90", "Counter-Clockwise 90", "Clockwise 180", "Counter-Clockwise 180", "Clockwise 270", "Counter-Clockwise 270"];
   document.write(instructions[0].bold());
+  var test = <%= @userlist.to_json %>;
+  //JSON.stringify(test);
+  document.write(gon.test);
   
 </script>
   <%=image_tag("clockwise90.png", class: "smiley", alt:"smiley") %>

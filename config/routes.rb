@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   get 'about'   => 'static_pages#about'
   get 'signup'  => 'users#new'
-  get 'game'  => 'static_pages#game'
+  get 'game'  => 'users#game'
   get 'levels' => 'static_pages#levels'
   get    'login'   => 'sessions#new'
   post   'login'   => 'sessions#create'

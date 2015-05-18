@@ -4,4 +4,10 @@ class StaticPagesController < ApplicationController
 
   def about
   end
+  def game
+
+  end
+  def levels
+  end
+
 end
