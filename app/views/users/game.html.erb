@@ -44,7 +44,8 @@
       var instr = instructions();
       instr[0] = instr[0].fontsize(5);
       instr[1] = instr[1].fontsize(5);
-      document.write(instr[0].bold() +"   "+ instr[1].bold());
+      //document.write(instr[0].bold() +"   "+ instr[1].bold());
+      document.body.appendChild(instr);
       var da = block(gridS);
       /*call to convert double array to single array*/
       var newar = convert(da);
@@ -76,7 +77,7 @@
        	 player[row][col] = 0; 
      	 }
      	 });
-       	 document.body.appendChild(grid);
+       document.body.appendChild(grid);
      	 document.body.appendChild(grid1);
       	instr = instructions();
       	//document.write(instr[0].bold() +"   "+ instr[1].bold());
@@ -145,10 +146,9 @@
      	 solved = solver(gridS, instr, da);
     }
     else{
-        alert("Not quite. Try again!");
+    	speedup = 0;
+      alert("Not quite. Try again!");
     }
-  
-  
 }
   /*function that can compare two double arrays */
   function arraysIdentical(size, a, b) {

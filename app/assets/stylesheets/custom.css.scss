@@ -162,12 +162,13 @@ canvas{
     margin-left: 900px;
     margin-right: -1000px;
     margin-top: 50px;
+    width:300px; 
+    height:300px;
 
      }
 .grid td {
     cursor:pointer;
-    width:100px; 
-    height:100px;
+
     border:2px solid #000000;
 }
 .grid td.clicked {
@@ -180,10 +181,11 @@ canvas{
 .grid1{  
     margin-left: 300px;
     margin-top: -300px;
+    width: 300px;
+    height: 300px;
      }
 .grid1 td {
-    width:100px;
-    height:100px;
+    
     border:2px solid #000000; 
 }
 img.smiley{
