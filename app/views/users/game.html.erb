@@ -3,15 +3,11 @@
 <head>
   <link rel='stylesheet' type='text/css' href='custom.css.scss'/>
 </head>
-  <h1>
-<script>
- // var test = '<%=@user.gridSize%>';
-  //document.write(test);
-</script>
-  <%=image_tag("clockwise90.png", class: "smiley", alt:"smiley") %>
-</h1>
+  
   <body> 
     <input type="button" name="button1" value="Done" style="position: absolute; left: 650px; top: 300px; width: 200px; " onclick="done()" />
+    <%=image_tag("clockwise90.png", :id => "pic", class: "smiley", alt:"smiley") %> 
+    <div id="Inst"></div>
     <script type="text/javascript">
     
     //var initialTime=getTime();
@@ -40,113 +36,79 @@
       document.body.appendChild(grid);
       document.body.appendChild(grid1);
       
-      var player = initialize(gridS);
+      /*generates the instructions*/
       var instr = instructions();
-      instr[0] = instr[0].fontsize(5);
-      instr[1] = instr[1].fontsize(5);
-      //document.write(instr[0].bold() +"   "+ instr[1].bold());
-      document.body.appendChild(instr);
-      var da = block(gridS);
+//creates the generated grid TODO:NEEDS TO BE A SWITCH STATEMENT TO CHOOSE THE CORRECT LEVEL TYPE 
+      var generatedGrid = block(gridS);
       /*call to convert double array to single array*/
-      var newar = convert(da);
+      var newar = convert(generatedGrid);
       /*fills squares based on grid generated into an array*/
       var filled = fill(newar);
-      
-      var solved = solver(gridS, instr, da);
-      
+      //creates an empty grid to hold the players data
+      var player = initialize(gridS);
+      //gets the solved grid for the puzzle
+      var solved = solver(gridS, instr, generatedGrid);
+      //writes the instructions to the screen 
+      var displayInstr = writeInstr();
+
+     //function that writes instructions to the screen dynamically 
+     function writeInstr(){
+      var t =document.getElementById("Inst").innerHTML = instr;
+     }
+
+     function drawSmiley(){
+        var t = document.getElementById("pic").src = ".../app/assets/images/counterclockwise90.png";
+     }
+
     /*called when user clicks the button*/
     function done(){
-      var temp = arraysIdentical(gridS,solved,player);
-      if(temp && speedup ==1){
-      	 var emp = empty(18);
-      	 gridS++;
-     	 player = initialize(gridS);
-     	 document.body.removeChild(grid);
-     	 document.body.removeChild(grid1);
-     	 grid1 = staticGrid(gridS,gridS,function(el,row,col,i){
-
-      });
-
-      	 grid = clickableGrid(gridS,gridS,function(el,row,col,i){
-     	 if(el.className == '' || el.className == 'unclicked'){
-     	  el.className='clicked';
-        	player[row][col] = 1; 
-       	 }
-     	 else{
-        	el.className ='unclicked';
-       	 player[row][col] = 0; 
-     	 }
-     	 });
-       document.body.appendChild(grid);
-     	 document.body.appendChild(grid1);
-      	instr = instructions();
-      	//document.write(instr[0].bold() +"   "+ instr[1].bold());
-     	 da = block(gridS);
-     	/*call to convert double array to single array*/
-     	newar = convert(da);
-     	 /*fills squares based on grid generated into an array*/
-     	 filled = fill(newar);
-
-     	 solved = solver(gridS, instr, da);
-    	}
-    else if(temp && speedup == 0 && correctRow>=4){
-    	 var emp = empty(18);
-    	 correctRow = 0;
-     	 player = initialize(gridS);
-     	 document.body.removeChild(grid);
-     	 document.body.removeChild(grid1);
-     	 grid = clickableGrid(gridS,gridS,function(el,row,col,i){
-     	 if(el.className == '' || el.className == 'unclicked'){
-     	  el.className='clicked';
-        	player[row][col] = 1; 
-       	 }
-     	 else{
-        	el.className ='unclicked';
-       	 player[row][col] = 0; 
-     	 }
-     	 });
-     	 document.body.appendChild(grid);
-     	 document.body.appendChild(grid1);
-      	instr = instructions();
-      	//document.write(instr[0].bold() +"   "+ instr[1].bold());
-     	 da = block(gridS);
-     	/*call to convert double array to single array*/
-     	newar = convert(da);
-     	 /*fills squares based on grid generated into an array*/
-     	 filled = fill(newar);
-
-     	 solved = solver(gridS, instr, da);
-    }
-    else if(temp && correctRow<4){
- 	     var emp = empty(18);
- 	     correctRow++;
-     	 player = initialize(gridS);
-     	 document.body.removeChild(grid);
-     	 document.body.removeChild(grid1);
-     	 grid = clickableGrid(gridS,gridS,function(el,row,col,i){
-     	 if(el.className == '' || el.className == 'unclicked'){
-     	  el.className='clicked';
-        	player[row][col] = 1; 
-       	 }
-     	 else{
-        	el.className ='unclicked';
-       	 player[row][col] = 0; 
-     	 }
-     	 });
-     	 document.body.appendChild(grid);
-     	 document.body.appendChild(grid1);
-      	instr = instructions();
-      	//document.write(instr[0].bold() +"   "+ instr[1].bold());
-     	 da = block(gridS);
-     	/*call to convert double array to single array*/
-     	newar = convert(da);
-     	 /*fills squares based on grid generated into an array*/
-     	 filled = fill(newar);
-
-     	 solved = solver(gridS, instr, da);
-    }
+      //determines if the players grid and solved grid are the same 
+      var temp = arraysIdentical(gridS,solved,player); 
+      if(temp){
+        if(speedup==1){
+          gridS++;
+        } 
+     /*  else{
+          if(correctRow==4){
+          correctRow = 0;
+          gridS++;//REALLY WILL BE LEVEL TYPE THAT CHANGES 
+        }
+          else{
+          corectRow++;
+        }}*/
+        var emp = empty(18);
+        player = initialize(gridS);
+        document.body.removeChild(grid);
+        document.body.removeChild(grid1);
+        grid1 = staticGrid(gridS,gridS,function(el,row,col,i){
+          });
+        grid = clickableGrid(gridS,gridS,function(el,row,col,i){
+        if(el.className == '' || el.className == 'unclicked'){
+        el.className='clicked';
+          player[row][col] = 1; 
+         }
+        else{
+          el.className ='unclicked';
+          player[row][col] = 0; 
+        }
+        });
+        document.body.appendChild(grid);
+        document.body.appendChild(grid1);
+        instr = instructions();
+        //document.write(instr[0].bold() +"   "+ instr[1].bold());
+        generatedGrid = block(gridS);
+        /*call to convert double array to single array*/
+        newar = convert(generatedGrid);
+        /*fills squares based on grid generated into an array*/
+        filled = fill(newar);
+        solved = solver(gridS, instr, generatedGrid);
+        displayInstr = writeInstr();
+      
+      }
+    
     else{
-    	speedup = 0;
+      speedup = 0;
+      correctRow = 0;
       alert("Not quite. Try again!");
     }
 }
@@ -235,7 +197,7 @@
 
       /*function that converts a 2-d array to a single array*/
       function convert(doubleArray){
-    	return doubleArray.join().split(",");
+      return doubleArray.join().split(",");
       }
    
     /*function that solves the level*/
@@ -263,7 +225,7 @@
 
     //returns an array of instruction 
    function initialize(gridsize)
-	{ 
+  { 
   //alert("In initialize");
   var result = new Array();
   for (var i = 0; i <gridsize; i++) 
@@ -280,15 +242,15 @@
 }
 
 function instructions(){
-    	var rotation = ["Clockwise", "Counter-Clockwise"];
-    	var degree = ["90","180","270"];
-    	var randomRotation= Math.floor(Math.random()*2);//0-1
-    	var randomDegree = Math.floor(Math.random()*3);//0-2
-    	var instruction = new Array();
-    	instruction[0] = rotation[randomRotation];
-    	instruction[1] = degree[randomDegree];
-    	return instruction;
-   	  }
+      var rotation = ["Clockwise", "Counter-Clockwise"];
+      var degree = ["90","180","270"];
+      var randomRotation= Math.floor(Math.random()*2);//0-1
+      var randomDegree = Math.floor(Math.random()*3);//0-2
+      var instruction = new Array();
+      instruction[0] = rotation[randomRotation];
+      instruction[1] = degree[randomDegree];
+      return instruction;
+      }
 
 function block(gridsize)
   {
