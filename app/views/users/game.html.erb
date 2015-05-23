@@ -68,14 +68,10 @@
         if(speedup==1){
           gridS++;
         } 
-     /*  else{
-          if(correctRow==4){
+        if(correctRow==4){
           correctRow = 0;
           gridS++;//REALLY WILL BE LEVEL TYPE THAT CHANGES 
         }
-          else{
-          corectRow++;
-        }}*/
         var emp = empty(18);
         player = initialize(gridS);
         document.body.removeChild(grid);
@@ -103,7 +99,7 @@
         filled = fill(newar);
         solved = solver(gridS, instr, generatedGrid);
         displayInstr = writeInstr();
-      
+        correctRow += 1;
       }
     
     else{
