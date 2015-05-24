@@ -9,12 +9,20 @@
     <%=image_tag("clockwise90.png", :id => "pic", class: "smiley", alt:"smiley") %> 
     <div id="Inst"></div>
     <script type="text/javascript">
-    
-    //var initialTime=getTime();
-     
+      //the start time of the page
+      var start = new Date().getTime(); 
+      //the time elapsed since page started 
+      var elapsed = '0.0';
+
       var speedup = '<%=@user.speedup%>';
       var correctRow = '<%=@user.corrRow%>';
       var gridS = '<%=@user.gridSize%>';
+      var levelNum = '<%=@user.levelNum%>';
+      var levelType = '<%=@user.levelType%>';
+      var attempts = 0; 
+      var levelInformation;
+      var totalCorrect = 50; 
+
       /* function to make the clickable grid and to determine what happens when the block is clicked */
       var grid = clickableGrid(gridS,gridS,function(el,row,col,i){
       if(el.className == '' || el.className == 'unclicked'){
@@ -64,6 +72,7 @@
     function done(){
       //determines if the players grid and solved grid are the same 
       var temp = arraysIdentical(gridS,solved,player); 
+      var timer = getInterval();
       if(temp){
         if(speedup==1){
           gridS++;
@@ -100,14 +109,43 @@
         solved = solver(gridS, instr, generatedGrid);
         displayInstr = writeInstr();
         correctRow += 1;
+        //gets variables ready to be passed to a ruby call
+        var tests = update(speedup, correctRow, gridS, levelNum, levelType,attempts, levelInformation, totalCorrect);
+
+        //Calls the controller to update the database variables 
+        var test = 'add_info(:speed=>"speedup_field", :correctRow=>"correctRow_field", :grid=>"gridS_field", :level=>"levelNum_field", :type => "levelType_field", :total=>"attempts_field", :levelInfo=>"levelInformation_field", :correct=>"totalCorrect_field")';
       }
     
     else{
       speedup = 0;
       correctRow = 0;
-      alert("Not quite. Try again!");
+        //gets variables ready to be passed to a ruby call
+        // var tests = update(speedup, correctRow, gridS, levelNum, levelType,attempts, levelInformation, totalCorrect);
+
+        //Calls the controller to update the database variables 
+        var test = 'add_info(:speed=>"#speedup_field", :correctRow=>"#correctRow_field", :grid=>"#gridS_field", :level=>"#levelNum_field", :type => "#levelType_field", :total=>"#attempts_field", :levelInfo=>"#levelInformation_field", :correct=>"#totalCorrect_field")';
+          var testTemp = '<%=@user.totalCorrect%>';
+         // alert(testTemp);
+         alert("Not quite. Try again!");
     }
 }
+  
+  //function that updates the database
+  function update(speedup, correctRow,gridS, levelNum, levelType,attempt,levelInformation,totalCorrect){
+   $(document).ready(function(speedup, correctRow,gridS, levelNum, levelType,attempt,levelInformation,totalCorrect){
+        $("#speedup_field").val(speedup);
+        $("#correctRow_field").val(correctRow);
+        $("#gridS_field").val(gridS);
+        $("#levelNum_field").val(levelNum);
+        $("#levelType_field").val(levelType);
+        $("#attempts_field").val(attempt);
+        $("#levelInformation_field").val(levelInformation);
+        $("#totalCorrect_field").val(totalCorrect);
+   });
+
+  }
+
+
   /*function that can compare two double arrays */
   function arraysIdentical(size, a, b) {
     var i = 0;
@@ -123,10 +161,10 @@
     }
 
   /*function that getsNewTime */
-  function getInterval(oldtime)
+  function getInterval()
   {
-    var time=getTime();
-    return time-oldtime;
+    var time= new Date().getTime()-start;
+    elapsed = Math.floor(time/100)/10;
   }
 
      /* function that builds the clickable grid*/
