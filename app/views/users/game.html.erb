@@ -6,7 +6,7 @@
   
   <body> 
     <input type="button" name="button1" value="Done" style="position: absolute; left: 650px; top: 300px; width: 200px; " onclick="done()" />
-    <%=image_tag("clockwise90.png", :id => "pic", class: "smiley", alt:"smiley") %> 
+    <%=image_tag("clockwise90.png", :id => "pic", class: "smiley", alt:"smiley") %>
     <div id="Inst"></div>
     <script type="text/javascript">
       //the start time of the page
@@ -14,14 +14,20 @@
       //the time elapsed since page started 
       var elapsed = '0.0';
 
+      
+
+
       var speedup = '<%=@user.speedup%>';
       var correctRow = '<%=@user.corrRow%>';
       var gridS = '<%=@user.gridSize%>';
       var levelNum = '<%=@user.levelNum%>';
-      var levelType = '<%=@user.levelType%>';
+      var levelType = 0;
       var attempts = 0; 
-      var levelInformation;
-      var totalCorrect = 50; 
+      var levelInformation = '';
+      var correct = 50; 
+      var group = '<%=@user.group%>';
+      var groupOne = [0,1,2,3];
+      var groupTwo = [0,1,2,3];
 
       /* function to make the clickable grid and to determine what happens when the block is clicked */
       var grid = clickableGrid(gridS,gridS,function(el,row,col,i){
@@ -46,8 +52,8 @@
       
       /*generates the instructions*/
       var instr = instructions();
-//creates the generated grid TODO:NEEDS TO BE A SWITCH STATEMENT TO CHOOSE THE CORRECT LEVEL TYPE 
-      var generatedGrid = block(gridS);
+      //creates the generated grid 
+      var generatedGrid = gridMaker(levelType,gridS);
       /*call to convert double array to single array*/
       var newar = convert(generatedGrid);
       /*fills squares based on grid generated into an array*/
@@ -75,11 +81,12 @@
       var timer = getInterval();
       if(temp){
         if(speedup==1){
+          levelType++;
           gridS++;
         } 
         if(correctRow==4){
           correctRow = 0;
-          gridS++;//REALLY WILL BE LEVEL TYPE THAT CHANGES 
+          levelType++;
         }
         var emp = empty(18);
         player = initialize(gridS);
@@ -100,8 +107,7 @@
         document.body.appendChild(grid);
         document.body.appendChild(grid1);
         instr = instructions();
-        //document.write(instr[0].bold() +"   "+ instr[1].bold());
-        generatedGrid = block(gridS);
+        generatedGrid = gridMaker(levelType, gridS);
         /*call to convert double array to single array*/
         newar = convert(generatedGrid);
         /*fills squares based on grid generated into an array*/
@@ -110,7 +116,7 @@
         displayInstr = writeInstr();
         correctRow += 1;
         //gets variables ready to be passed to a ruby call
-        var tests = update(speedup, correctRow, gridS, levelNum, levelType,attempts, levelInformation, totalCorrect);
+        //var tests = update(speedup, correctRow, gridS, levelNum, levelType,attempts, levelInformation, totalCorrect);
 
         //Calls the controller to update the database variables 
         var test = 'add_info(:speed=>"speedup_field", :correctRow=>"correctRow_field", :grid=>"gridS_field", :level=>"levelNum_field", :type => "levelType_field", :total=>"attempts_field", :levelInfo=>"levelInformation_field", :correct=>"totalCorrect_field")';
@@ -120,12 +126,17 @@
       speedup = 0;
       correctRow = 0;
         //gets variables ready to be passed to a ruby call
-        // var tests = update(speedup, correctRow, gridS, levelNum, levelType,attempts, levelInformation, totalCorrect);
-
+        //var tests = update(speedup, correctRow, gridS, levelNum, levelType,attempts, levelInformation, totalCorrect);
+       /* jQuery.ajax({
+           data: 'totalCorrect=' + totalCorrect,
+           dataType: 'script',
+           type: 'post',
+           url: "/controller/add_info"
+        });*/
         //Calls the controller to update the database variables 
+        var h = '$("#totalCorrect_field").val(correct)';
         var test = 'add_info(:speed=>"#speedup_field", :correctRow=>"#correctRow_field", :grid=>"#gridS_field", :level=>"#levelNum_field", :type => "#levelType_field", :total=>"#attempts_field", :levelInfo=>"#levelInformation_field", :correct=>"#totalCorrect_field")';
-          var testTemp = '<%=@user.totalCorrect%>';
-         // alert(testTemp);
+         var testTemp = '<%=@user.totalCorrect%>';
          alert("Not quite. Try again!");
     }
 }
@@ -133,19 +144,30 @@
   //function that updates the database
   function update(speedup, correctRow,gridS, levelNum, levelType,attempt,levelInformation,totalCorrect){
    $(document).ready(function(speedup, correctRow,gridS, levelNum, levelType,attempt,levelInformation,totalCorrect){
-        $("#speedup_field").val(speedup);
-        $("#correctRow_field").val(correctRow);
-        $("#gridS_field").val(gridS);
-        $("#levelNum_field").val(levelNum);
-        $("#levelType_field").val(levelType);
-        $("#attempts_field").val(attempt);
-        $("#levelInformation_field").val(levelInformation);
-        $("#totalCorrect_field").val(totalCorrect);
+        var a = $("#speedup_field").val(speedup);
+        var b = $("#correctRow_field").val(correctRow);
+        var c = $("#gridS_field").val(gridS);
+        var d = $("#levelNum_field").val(levelNum);
+        var e = $("#levelType_field").val(levelType);
+        var f = $("#attempts_field").val(attempt);
+        var g = $("#levelInformation_field").val(levelInformation);
+        var h = $("#totalCorrect_field").val(totalCorrect);
    });
 
   }
 
-
+  //gets the next type of level
+  function levelType(group){
+    var type = levelType % 4; //should be 8 when all level types finished
+    if(group  == 0){
+      return groupOne[type];
+    }
+    else{
+      return groupTwo[type];
+    }
+    return -1; 
+  }
+  
   /*function that can compare two double arrays */
   function arraysIdentical(size, a, b) {
     var i = 0;
@@ -286,34 +308,261 @@ function instructions(){
       return instruction;
       }
 
-function block(gridsize)
+function gridMaker(shapetype, gridsize)
+{
+  //0=block, 1=sides, 2=corners, 3=cornerSides, 4=sepSides, 5=sepCorners, 6=sepMixed, 7=islands 
+  var grid;
+  switch(shapetype)
   {
-    var result = new Array();
-    var row=Math.floor(Math.random()*2);//0-1
-    var rowNumber = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
-    for (var i = 0; i <gridsize; i++) 
-    {
-      result[i]=new Array();
-      for (var j = 0; j <gridsize; j++) 
-      {     
-        if(row==1)//row not column
-        {
-          if(j==rowNumber)
-            { result[i][j]=1; } 
-          else
-            { result[i][j]=0; }       
-        }//end row
-        else//column
-        {
-          if(i==rowNumber)
-          { result[i][j]=1; }
-          else
-          { result[i][j]=0; }
-        }//end column
-      }//end inner for loop
-    }//end outer for loop
-    return result;
+    case 0:
+      grid=block(gridsize);
+      break;
+    case 1:
+       grid=sides(gridsize);
+      break;
+    case 2:
+      grid=corners(gridsize);
+      break;
+    case 3:
+      grid=cornerSides(gridsize);
+      break;
+    /*case 4:
+      grid=sepSides(gridsize);
+      break;
+    case 5:
+      grid=sepCorners(gridsize);
+      break;
+    case 6:
+      grid=sepMixed(gridsize);
+      break;
+    case 7:
+      grid=islands(gridsize);
+      break;*/
+    default:
+      console.log("this should never happen");
+      grid=-1;
   }
+  return grid;
+}//end gridmaker
+
+
+function block(gridsize)
+{
+  var result = new Array();
+  var row=Math.floor(Math.random()*2);//0-1
+  var rowNumber = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+  for (var i = 0; i <gridsize; i++) 
+  {
+    result[i]=new Array();
+    for (var j = 0; j <gridsize; j++) 
+    {     
+      if(row==1)//row not column
+      {
+        if(j==rowNumber)
+          { result[i][j]=1; } 
+        else
+          { result[i][j]=0; }       
+      }//end row
+      else//column
+      {
+        if(i==rowNumber)
+        { result[i][j]=1; }
+        else
+        { result[i][j]=0; }
+      }//end column
+    }//end inner for loop
+  }//end outer for loop
+  return result;
+}//end blocks
+
+function getSideNeighbors(i,j,grid,gridsize,iarr,jarr)//WIP Totally check [i][j+1]; [i],[j-1]; [i-1][j]; [i+1][j]
+{
+  //push shoves things onto the end and returns the length
+  var pushCounter=0;
+  if(i>0 && grid[i-1][j]===0)
+  {
+    iarr.push(i-1);
+    jarr.push(j);
+    console.log("SideNeighbors: pushing %i ,%i onto neighbors",i-1,j);
+    pushCounter++;
+  }
+  if(j>0 && grid[i][j-1]===0)
+  {
+    iarr.push(i);
+    jarr.push(j-1);
+    console.log("SideNeighbors: pushing %i ,%i onto neighbors",i,j-1);
+    pushCounter++;
+  } 
+  if(i<gridsize-1 && grid[i+1][j]===0)
+  {
+    iarr.push(i+1);
+    jarr.push(j);
+    console.log("SideNeighbors: pushing %i ,%i onto neighbors",i+1,j);
+    pushCounter++;
+  }
+  if(j<gridsize-1 && grid[i][j+1]===0)
+  {
+    iarr.push(i);
+    jarr.push(j+1);
+    console.log("SideNeighbors: pushing %i ,%i onto neighbors",i,j+1);
+    pushCounter++;
+  }
+  //to return things just shove j on the back of i, we will always get an even number, 0 pairs with array.length/2, add up
+  console.log("done getting all %i SideNeighbors of %i , %i",pushCounter,i,j);
+  return pushCounter;
+}
+
+function sides(gridsize)//error not gettin all always 4?
+{
+  var result = initialize(gridsize);
+  var filledSquares=Math.floor(gridsize*gridsize/3)-1;//30% rounded down -first point
+  var i = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+  var j = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+    result[i][j]=1;
+  console.log("sides: original seed: %i , %i",i,j);
+  var iarr=new Array();
+  var jarr=new Array();
+  getSideNeighbors(i,j,result,gridsize,iarr,jarr);
+  while(filledSquares>=0)
+    {
+      var randomNeighbor=Math.floor(Math.random()*iarr.length);
+      result[ iarr[randomNeighbor] ][ jarr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
+      console.log("%i left to fill, filling %i ,%i",filledSquares,iarr[randomNeighbor],jarr[randomNeighbor]);
+      //I dont think we will ever run out of available neighborsToSplit
+      //getting all neighbors
+      getSideNeighbors(iarr[randomNeighbor],jarr[randomNeighbor],result,gridsize,iarr,jarr);
+      //now to split them up and add them to our current iarr and jnieghbors (at end)
+      //filling square
+      console.log("printing neighbors");
+      console.log(iarr);
+      console.log(jarr);
+      //now to remove extras
+      i=iarr.pop();
+      j=jarr.pop();
+      if(randomNeighbor!==iarr[iarr.length-1])//we picked didnt pick the last one so have holes to fill;
+      {
+        iarr[randomNeighbor]=i;
+        jarr[randomNeighbor]=j;
+      }
+      filledSquares--;
+    }
+  return result;
+}//end sides
+
+function getCornerNeighbors(i,j,grid,gridsize,iarr,jarr)//WIP Totally check [i+1][j+1]; [i-1],[j-1]; [i-1][j+1]; [i+1][j-1]
+{
+  //push shoves things onto the end and returns the length
+  var pushCounter=0;
+  if(i>0 && j>0 && grid[i-1][j-1]===0)
+  {
+    iarr.push(i-1);
+    jarr.push(j-1);
+    console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i-1,j-1);
+    pushCounter++;
+  }
+  if(j>0 && i<gridsize-1 && grid[i][j-1]===0)
+  {
+    iarr.push(i+1);
+    jarr.push(j-1);
+    console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i+1,j-1);
+    pushCounter++;
+  } 
+  if(i<gridsize-1 && j<gridsize-1 && grid[i+1][j]===0)
+  {
+    iarr.push(i+1);
+    jarr.push(j+1);
+    console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i+1,j+1);
+    pushCounter++;
+  }
+  if(j<gridsize-1 && i>0 && grid[i][j+1]===0)
+  {
+    iarr.push(i-1);
+    jarr.push(j+1);
+    console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i-1,j+1);
+    pushCounter++;
+  }
+  //to return things just shove j on the back of i, we will always get an even number, 0 pairs with array.length/2, add up
+  console.log("done getting all %i CornerNeighbors of %i , %i",pushCounter,i,j);
+  return pushCounter;
+}
+
+
+function corners(gridsize)//error not gettin all always 4?
+{
+  var result = initialize(gridsize);
+  var filledSquares=Math.floor(gridsize*gridsize/3)-1;//30% rounded down -first point
+  var i = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+  var j = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+    result[i][j]=1;
+  console.log("corners: original seed: %i , %i",i,j);
+  var iarr=new Array();
+  var jarr=new Array();
+  getCornerNeighbors(i,j,result,gridsize,iarr,jarr);
+  while(filledSquares>=0)
+    {
+      var randomNeighbor=Math.floor(Math.random()*iarr.length);
+      result[ iarr[randomNeighbor] ][ jarr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
+      console.log("%i left to fill, filling %i ,%i",filledSquares,iarr[randomNeighbor],jarr[randomNeighbor]);
+      //I dont think we will ever run out of available neighborsToSplit
+      //getting all neighbors
+      getCornerNeighbors(iarr[randomNeighbor],jarr[randomNeighbor],result,gridsize,iarr,jarr);
+      //now to split them up and add them to our current iarr and jnieghbors (at end)
+      //filling square
+      console.log("printing neighbors");
+      console.log(iarr);
+      console.log(jarr);
+      //now to remove extras
+      i=iarr.pop();
+      j=jarr.pop();
+      if(randomNeighbor!==iarr[iarr.length-1])//we picked didnt pick the last one so have holes to fill;
+      {
+        iarr[randomNeighbor]=i;
+        jarr[randomNeighbor]=j;
+      }
+      filledSquares--;
+    }
+  return result;
+}//end corners
+
+function cornerSides(gridsize)
+{
+  var result = initialize(gridsize);
+  var filledSquares=Math.floor(gridsize*gridsize/3)-1;//30% rounded down -first point
+  var i = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+  var j = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+    result[i][j]=1;
+  console.log("corners: original seed: %i , %i",i,j);
+  var iarr=new Array();
+  var jarr=new Array();
+  getCornerNeighbors(i,j,result,gridsize,iarr,jarr);
+  getSideNeighbors(i,j,result,gridsize,iarr,jarr);
+  while(filledSquares>=0)
+    {
+      var randomNeighbor=Math.floor(Math.random()*iarr.length);
+      result[ iarr[randomNeighbor] ][ jarr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
+      console.log("%i left to fill, filling %i ,%i",filledSquares,iarr[randomNeighbor],jarr[randomNeighbor]);
+      //I dont think we will ever run out of available neighborsToSplit
+      //getting all neighbors
+      getCornerNeighbors(iarr[randomNeighbor],jarr[randomNeighbor],result,gridsize,iarr,jarr);
+      getSideNeighbors(iarr[randomNeighbor],jarr[randomNeighbor],result,gridsize,iarr,jarr);
+      //now to split them up and add them to our current iarr and jnieghbors (at end)
+      //filling square
+      console.log("printing neighbors");
+      console.log(iarr);
+      console.log(jarr);
+      //now to remove extras
+      i=iarr.pop();
+      j=jarr.pop();
+      if(randomNeighbor!==iarr[iarr.length-1])//we picked didnt pick the last one so have holes to fill;
+      {
+        iarr[randomNeighbor]=i;
+        jarr[randomNeighbor]=j;
+      }
+      filledSquares--;
+    }
+  return result;
+}//end sides
+
      
     </script>
     
