@@ -64,6 +64,8 @@
       var solved = solver(gridS, instr, generatedGrid);
       //writes the instructions to the screen 
       var displayInstr = writeInstr();
+      //draws smiley
+      var draw = drawSmiley();
 
      //function that writes instructions to the screen dynamically 
      function writeInstr(){
@@ -71,7 +73,17 @@
      }
 
      function drawSmiley(){
-        var t = document.getElementById("pic").src = ".../app/assets/images/counterclockwise90.png";
+      if((instr[0]== "Clockwise" && instr[1] == "90")||(instr[0]== "Counter-Clockwise"&& instr[1] == "270")){
+          var t = document.getElementById("pic").src = "assets/clockwise90.png";}
+      else if((instr[0]== "Clockwise"&& instr[1] == 180)||(instr[0]== "Counter-Clockwise"&& instr[1] == "180")){
+          var t = document.getElementById("pic").src = "assets/180degrees.png";
+
+      }
+      else if((instr[0]== "Clockwise"&& instr[1] == "270")||(instr[0]== "Counter-Clockwise"&& instr[1] == "90")){
+          var t = document.getElementById("pic").src = "assets/counterclockwise90.png";
+
+      }
+
      }
 
     /*called when user clicks the button*/
@@ -114,6 +126,7 @@
         filled = fill(newar);
         solved = solver(gridS, instr, generatedGrid);
         displayInstr = writeInstr();
+        draw = drawSmiley();
         correctRow += 1;
         //gets variables ready to be passed to a ruby call
         //var tests = update(speedup, correctRow, gridS, levelNum, levelType,attempts, levelInformation, totalCorrect);
