@@ -2,22 +2,19 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
   end
-  def game 
+  def index
+   
+  end
+   def game 
     @user = User.find(session[:user_id])
     def add_info
     add_info_with_para(params)
   end
   end
-  
- 
   def new
-  	@user = User.new
+    @user = User.new
     def create
     @user = User.new(user_params)    # Not the final implementation!
-     
-    respond_to do |format|
-     format.json :json => user
-    end
     if @user.save
       log_in @user
       flash[:success] = "Welcome to Gridworkz!"
@@ -33,8 +30,7 @@ end
       params.require(:user).permit(:name, :age, :gender, :password,
                                    :password_confirmation)
     end
-  
-    def add_info_with_para p = {}
+     def add_info_with_para p = {}
       user = User.find(session[:user_id])
       user.speedup = p[:speed]
       user.corrRow = p[:correctRow]
@@ -45,5 +41,5 @@ end
       user.levelData = p[:levelInfo]
       user.totalCorrect = p[:correct] 
     end
-
+ 
 end

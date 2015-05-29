@@ -36,8 +36,9 @@ class User < ActiveRecord::Base
     self.gridSize ||= 3
     self.levelType ||= 0
     self.color ||= "blue"
-    self.group ||= 0+rand(2)
+    self.group ||= 0+rand(1);
     self.attempts ||=0
     self.totalCorrect ||=0
   end
+ 
 end
