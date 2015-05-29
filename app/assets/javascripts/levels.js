@@ -268,7 +268,7 @@ function cornerSides(gridsize)
 	var i = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 	var j = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 		result[i][j]=1;
-	console.log("corners: original seed: %i , %i",i,j);
+	console.log("cornerSides: original seed: %i , %i",i,j);
 	var iarr=new Array();
 	var jarr=new Array();
 	//getCornerNeighbors(i,j,result,gridsize,iarr,jarr);
@@ -276,7 +276,7 @@ function cornerSides(gridsize)
 	console.log("cornerSides: corners iarr.length = %i ",iarr.length);
 	console.log("cornerSides: sides adding %i to iarr ",getSideNeighbors(i,j,result,gridsize,iarr,jarr));
 	console.log("cornerSides: sides iarr.length = %i ",iarr.length);
-	while(filledSquares>=0)
+	while(filledSquares>0)
 		{
 			var randomNeighbor=Math.floor(Math.random()*iarr.length);
 			result[ iarr[randomNeighbor] ][ jarr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
@@ -300,8 +300,30 @@ function cornerSides(gridsize)
 			}
 			filledSquares--;
 		}
+	var index;
+	for(index=0; index<iarr.length; index++)
+	{
+
+		if(cornersTouching(iarr[index],jarr[index],result)===1 && numberTouching(iarr[index],jarr[index],result)===1)
+		{
+			result[iarr[index]][jarr[index]]=1;
+			index=iarr.length;
+			console.log("corner to force = %i, %i",iarr[index],jarr[index]);
+		}
+
+		else
+		{
+			if(i==iarr.length-1)
+			{
+				i=2*iarr.length;
+				console.log("cannot locate corner to force!");
+			}
+				//marker for something that should NEVER happen
+		}
+	}	
 	return result;
-}//end sides
+}//end cornerSides
+
 
 
 
