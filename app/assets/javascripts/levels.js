@@ -1,5 +1,27 @@
 //new strategy; array of neighbors, remove random, and replace with end of lsit.
 //cd ../users/paz/desktop/gridworkz
+function levelGenerator(level)
+{
+	console.log("in levelGenerator");
+	if(level<=4)
+	{
+		console.log("level<=4");
+		gridsize=3;
+		if(level===4)
+			{shapetype=7;}
+		else
+			{shapetype=level;}
+	}
+	else//level greater than 4; gridsize>3
+	{
+		level=level-4;
+		gridsize=(level/8)+4;
+		shapetype=level%8;
+	}	
+	console.log("level is %i gridsize is %i shapetype is %i",level,gridsize,shapetype);
+	var grid=gridMaker(shapetype,level);
+	return grid;
+}
 function gridMaker(shapetype, gridsize)
 {
 	/*
