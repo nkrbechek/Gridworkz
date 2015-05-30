@@ -507,100 +507,106 @@ function sepSideNeighbors(i,j,grid,gridsize,iarr,jarr,avoidgrid)// Totally check
 	return pushCounter;
 }// end sepSides
 
-
 function sepSides(gridsize)
 {
+	console.log("sepSides, made it in");
 	var result1 = initialize(gridsize);
 	var result2 = initialize(gridsize);
 	var filledSquares=Math.floor(gridsize*gridsize/3)-2;//30% rounded down -first point
 	var i1 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 	var j1 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
-	var i1arr=new Array();
-	var j1arr=new Array();
 		result1[i1][j1]=1;
 	var i2 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 	var j2 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 	while(numberTouching(i2,j2,result1)!==0 )//making sure seeds dont touch
-		{
-			i2 = Math.floor(Math.random()*gridsize);
-			j2 = Math.floor(Math.random()*gridsize);
-		}
+	{
+		i2 = Math.floor(Math.random()*gridsize);
+		j2 = Math.floor(Math.random()*gridsize);
+	}
 		result2[i2][j2]=1;//fill in first of result2
-	console.log("sepSides: original seed1: %i , %i",i1,j1);
-	console.log("sepSides: original seed2: %i , %i",i2,j2);
-	var i2arr=new Array();
-	var j2arr=new Array();
+	console.log("sepSides we got seeds initialized");
+	var i1edge=new Array();
+	var j1edge=new Array();
+	var i2edge=new Array();
+	var j2edge=new Array();
 
-	sepSideNeighbors(i1,j1,result1,gridsize,i1arr,j1arr,result2);
-	sepSideNeighbors(i2,j2,result2,gridsize,i2arr,j2arr,result1);
-	console.log("adding %i to i1,j1 ",sepSideNeighbors(i1,j1,result1,gridsize,i1arr,j1arr,result2));//first sides for 1
-	console.log("adding %i to i2,j2 ",sepSideNeighbors(i2,j2,result2,gridsize,i2arr,j2arr,result1));
-	console.log("printing i1,j1");
-	console.log(i1arr);
-	console.log(j1arr);
-	console.log("printing i2,j2");
-	console.log(i2arr);
-	console.log(j2arr);
-	console.log("i1arr.length =%i",i1arr.length);
-	console.log("i2arr.length =%i",i2arr.length);
-	console.log("just before while loop in Sepsides");
-	while(filledSquares>=0)
+	var iNeighbors=new Array();
+	var jNeighbors=new Array();
+	i1edge[0]=i1;
+	j1edge[0]=j1;
+	i2edge[0]=i2;
+	j2edge[0]=j2;
+
+	while(filledSquares>0)
+	{
+		console.log("got into while loop");
+		var gridToFill=Math.floor(Math.random()*2);//0 0r 1
+		if(gridToFill===0)
 		{
-			//console.log("in while loop, filledSquares = %i",filledSquares);
-			//console.log("i1arr.length =%i",i1arr.length);
-			//console.log("i2arr.length =%i",i2arr.length);
-			var whichSeed=Math.floor(Math.random*2);
-			var randomNeighbor=Math.min(Math.floor(Math.random()*i1arr.length),Math.floor(Math.random()*i2arr.length));//min here 
-			if(i1arr.length!==0)
+			console.log("filling first");
+			var edgeSeedIndex=Math.floor(Math.random()*i1edge.length);
+			i1=i1edge[edgeSeedIndex];
+			j1=j1edge[edgeSeedIndex];
+			var numNeighbor= sepSideNeighbors(i1,j1,result1,gridsize,iNeighbors,jNeighbors,result2);
+			if(numNeighbor!==0)
 			{
-				result1[ i1arr[randomNeighbor] ][ j1arr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
-				console.log("results 1 :%i left to fill, filling %i ,%i",filledSquares,i1arr[randomNeighbor],j1arr[randomNeighbor]);
-				//I dont think we will ever run out of available neighborsToSplit
-				//getting all neighbors
-				sepSideNeighbors(i1arr[randomNeighbor],j1arr[randomNeighbor],result1,gridsize,i1arr,j1arr,result2);
-				//now to split them up and add them to our current iarr and jnieghbors (at end)
-				//filling square
-				console.log("printing neighbors in result1");
-				console.log(i1arr);
-				console.log(j1arr);
-				//now to remove extras
-				i1=i1arr.pop();
-				j1=j1arr.pop();
-				if(randomNeighbor!==i1arr[i1arr.length-1])//we picked didnt pick the last one so have holes to fill;
+				console.log("number of choices we have : %i",numNeighbor);
+				numNeighbor=Math.floor(Math.random()*numNeighbor);
+				console.log("what we chose : %i",numNeighbor);
+				i1edge.push(iNeighbors[numNeighbor]);//not sure if valid syntax
+				j1edge.push(jNeighbors[numNeighbor]);
+				console.log("pushed onto edges, about to push onto results %i %i", iNeighbors[numNeighbor],jNeighbors[numNeighbor]);
+				result1[iNeighbors[numNeighbor]] [jNeighbors[numNeighbor]]=1;
+				if(sidesTouching(i1,j1,result1)==4)//throw it away no longer edge
 				{
-					i1arr[randomNeighbor]=i1;
-					j1arr[randomNeighbor]=j1;
+					var tempi=i1edge.pop();
+					var tempj=j1edge.pop();
+					if(edgeSeedIndex!==iarr[iarr.length-1])//we picked didnt pick the last one so have holes to fill;
+					{
+						i1edge[edgeSeedIndex]=tempi;
+						j1edge[edgeSeedIndex]=tempj;
+					}
 				}
 				filledSquares--;
-			}//end putting things in one
-			//console.log("i2arr.length =%i",i1arr.length);
-			if(i2arr.length!==0 )
+			}//MAKING SURE WE arent working with nothing
+			empty1DArray(iNeighbors);
+			empty1DArray(jNeighbors);
+		}//end filling first
+		else//filling second
+		{
+			console.log("filling second");
+			var edgeSeedIndex=Math.floor(Math.random()*i2edge.length);
+			i2=i2edge[edgeSeedIndex];
+			j2=j2edge[edgeSeedIndex];
+			var numNeighbor= sepSideNeighbors(i2,j2,result2,gridsize,iNeighbors,jNeighbors,result1);
+			console.log("number of choices we have : %i",numNeighbor);
+			if(numNeighbor!==0)
 			{
-				result2[ i2arr[randomNeighbor] ][ j2arr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
-				console.log(" result2 %i left to fill, filling %i ,%i",filledSquares,i2arr[randomNeighbor],j2arr[randomNeighbor]);
-				//I dont think we will ever run out of available neighborsToSplit
-				//getting all neighbors
-				sepSideNeighbors(i2arr[randomNeighbor],j2arr[randomNeighbor],result2,gridsize,i2arr,j2arr,result1);
-				//now to split them up and add them to our current iarr and jnieghbors (at end)
-				//filling square
-				console.log("printing neighbors in result2");
-				console.log(i2arr);
-				console.log(j2arr);
-				//now to remove extras
-				i2=i2arr.pop();
-				j2=j2arr.pop();
-				if(randomNeighbor!==i2arr[i2arr.length-1])//we picked didnt pick the last one so have holes to fill;
+				numNeighbor=Math.floor(Math.random()*numNeighbor);
+				console.log("what we chose : %i ",numNeighbor);
+				i2edge.push(iNeighbors[numNeighbor]);//not sure if valid syntax
+				j2edge.push(jNeighbors[numNeighbor]);
+				console.log("pushed onto edge  and now onto result %i %i",iNeighbors[numNeighbor],jNeighbors[numNeighbor]);
+				result2[iNeighbors[numNeighbor]] [jNeighbors[numNeighbor]]=1;
+				if(sidesTouching(i2,j2,result2)==4)
 				{
-					i2arr[randomNeighbor]=i2;
-					j2arr[randomNeighbor]=j2;
+					var tempi=i2edge.pop();
+					var tempj=j2edge.pop();
+					if(edgeSeedIndex!==iarr[iarr.length-1])//we picked didnt pick the last one so have holes to fill;
+					{
+						i2edge[edgeSeedIndex]=tempi;
+						j2edge[edgeSeedIndex]=tempj;
+					}
 				}
 				filledSquares--;
-			}//done putting things into 2
-		}//end while loop
+			}//end we did something
+			empty1DArray(iNeighbors);
+			empty1DArray(jNeighbors);
+		}//end filling second
+	}//end fillling while loop
 	result1=mergeArs(result1, result2,gridsize);
 	return result1;
-}//end Sepsides
-
+}//end sepSides
 
 function sepCornerNeighbors(i,j,grid,gridsize,iarr,jarr,avoidgrid)// Totally check [i][j+1]; [i],[j-1]; [i-1][j]; [i+1][j]
 {
