@@ -22,17 +22,9 @@ function levelGenerator(level)
 	var grid=gridMaker(shapetype,level);
 	return grid;
 }
-function gridMaker(shapetype, gridsize)
+function gridMaker(shapetype,level)
 {
-	/*
-
-	No magic numbers.  Maybe make an enum class.  somehow make it not case 0, but case block
-	maybe the javascript equivalent of declaring int grid block.
-	var gridblock = 1
-	case gridblock
-	*/
-
-
+	
 	//0=block, 1=sides, 2=corners, 3=cornerSides, 4=sepSides, 5=sepCorners, 6=sepMixed, 7=islands 
 	var grid;
 	switch(shapetype)
@@ -52,10 +44,10 @@ function gridMaker(shapetype, gridsize)
 		case 4:
 			grid=sepSides(gridsize);//works
 			break;
-		/*case 5:
+		case 5:
 			grid=sepCorners(gridsize);//does not work
 			break;
-		*/case 6:
+		case 6:
 			grid=sepMixed(gridsize);//does not work most of the time but doesnt stop things
 			break;
 		case 7:
@@ -116,14 +108,14 @@ function getSideNeighbors(i,j,grid,gridsize,iarr,jarr)//WIP Totally check [i][j+
 {
 	//push shoves things onto the end and returns the length
 	var pushCounter=0;
-	if(i>0 && grid[i-1][j]===0)
+	if(i!==0 && grid[i-1][j]===0)
 	{
 		iarr.push(i-1);
 		jarr.push(j);
 		//console.log("SideNeighbors: pushing %i ,%i onto neighbors",i-1,j);
 		pushCounter++;
 	}
-	if(j>0 && grid[i][j-1]===0)
+	if(j!==0 && grid[i][j-1]===0)
 	{
 		iarr.push(i);
 		jarr.push(j-1);
@@ -186,18 +178,18 @@ function sides(gridsize)//error not gettin all always 4?
 	return result;
 }//end sides
 
-function getCornerNeighbors(i,j,grid,gridsize,iarr,jarr)//WIP Totally check [i+1][j+1]; [i-1],[j-1]; [i-1][j+1]; [i+1][j-1]
+function getCornerNeighbors(i,j,grid,gridsize,iarr,jarr)//assume never given negatives
 {
 	//push shoves things onto the end and returns the length
 	var pushCounter=0;
-	if(i>0 && j>0 && grid[i-1][j-1]===0)
+	if(i!==0 && j!==0 && grid[i-1][j-1]===0)
 	{
 		iarr.push(i-1);
 		jarr.push(j-1);
 		//console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i-1,j-1);
 		pushCounter++;
 	}
-	if(j>0 && i<gridsize-1 && grid[i+1][j-1]===0)
+	if(j!==0 && i<gridsize-1 && grid[i+1][j-1]===0)
 	{
 		iarr.push(i+1);
 		jarr.push(j-1);
@@ -211,7 +203,7 @@ function getCornerNeighbors(i,j,grid,gridsize,iarr,jarr)//WIP Totally check [i+1
 		//console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i+1,j+1);
 		pushCounter++;
 	}
-	if(j<gridsize-1 && i>0 && grid[i-1][j+1]===0)
+	if(j<gridsize-1 && i!==0 && grid[i-1][j+1]===0)
 	{
 		iarr.push(i-1);
 		jarr.push(j+1);
@@ -326,7 +318,6 @@ function cornerSides(gridsize)
 
 
 
-
 function mergeArs(array1, array2, gridsize)
 {
 	console.log("merging results");
@@ -350,40 +341,40 @@ function cornersTouching(i,j,grid)
 {
 	var result=0;
 	//corners
-	if(i>0 && j>0 )
+	if(i!==0 && j!==0 )
 	{
-		console.log("cornersTouching i>0, j> 0; i=%i j=%i",i,j);
+		//console.log("cornersTouching i!==0, j!==0; i=%i j=%i",i,j);
 		if(grid[i-1][j-1]===1)
 		{
 			result++;
-			console.log("%i %i is touching",i-1,j-1);
+		//	console.log("%i %i is touching",i-1,j-1);
 		}
 	}
-	if(j>0 && i<gridsize-1)
+	if(j!==0 && i<gridsize-1)
 	{
-		console.log("cornersTouching i<gridsize-1, j>0, i=%i, j=%i",i,j);
+		//console.log("cornersTouching i<gridsize-1, j>0, i=%i, j=%i",i,j);
 		if(grid[i+1][j-1]===1)
 		{
 			result++;
-			console.log("%i %i is touching",i+1,j-1);
+		//	console.log("%i %i is touching",i+1,j-1);
 		}
 	}	
 	if(i<gridsize-1 && j<gridsize-1)
 	{
-		console.log("cornersTouching i<gridsize-1 j<gridsize-1 i=%i j=%i",i,j);
+		//console.log("cornersTouching i<gridsize-1 j<gridsize-1 i=%i j=%i",i,j);
 		if(grid[i+1][j+1]===1)
 		{
 			result++;
-			console.log("%i %i is touching",i+1,j+1);
+		//	console.log("%i %i is touching",i+1,j+1);
 		}
 	}
-	if(j<gridsize-1 && i>0)
+	if(j<gridsize-1 && i!==0)
 	{
-		console.log("cornersTouching j<gridsize-1 i>0, i=%i, j=%i",i,j);
+		//console.log("cornersTouching j<gridsize-1 i>0, i=%i, j=%i",i,j);
 		if( grid[i-1][j+1]===1)
 		{
 			result++;
-			console.log("%i %i is touching",i-1,j+1);
+		//	console.log("%i %i is touching",i-1,j+1);
 		}
 	}
 	return result;
@@ -392,21 +383,21 @@ function cornersTouching(i,j,grid)
 function sidesTouching(i,j,grid)
 {
 	var result=0;
-	if(i>0 )
+	if(i!==0 )
 	{
 		if(grid[i-1][j]===1)
 		{
 			result++;
-			console.log("%i %i is touching %i, %i",i-1,j,i,j);
+			//console.log("%i %i is touching %i, %i",i-1,j,i,j);
 		}
 	}
 	
-	if(j>0 )//already included
+	if(j!==0 )//already included
 	{
 		if(grid[i][j-1]===1)
 		{
 			result++;
-			console.log("%i %i is touching %i, %i",i,j-1,i,j);
+			//console.log("%i %i is touching %i, %i",i,j-1,i,j);
 		}
 	}
 	if(i<gridsize-1 )
@@ -414,7 +405,7 @@ function sidesTouching(i,j,grid)
 		if(grid[i+1][j]===1)
 		{
 			result++;
-			console.log("%i %i is touching %i,%i",i+1,j,i,j);
+			//console.log("%i %i is touching %i,%i",i+1,j,i,j);
 		}
 	}
 	if(j<gridsize-1 )
@@ -422,7 +413,7 @@ function sidesTouching(i,j,grid)
 		if(grid[i][j+1]===1)
 		{
 			result++;
-			console.log("%i %i is touching %i,%i",i,j+1,i,j);
+			//console.log("%i %i is touching %i,%i",i,j+1,i,j);
 		}
 	}
 	return result;
@@ -432,10 +423,10 @@ function numberTouching (i,j,grid)//returns 0 if nothing in the grid touches, el
 {
 	var result=0;
 	//corners
-	console.log("numberTouching: before cornersTouching");
+	//console.log("numberTouching: before cornersTouching");
 	result=result+cornersTouching(i,j,grid);
 	//sides
-	console.log("numberTouching: after corners before sides");
+	//console.log("numberTouching: after corners before sides");
 	result=result+sidesTouching(i,j,grid);
 	return result;
 }//end numberTouching
@@ -451,7 +442,7 @@ function sepSideNeighbors(i,j,grid,gridsize,iarr,jarr,avoidgrid)// Totally check
 	{console.log("sepSideNeighbors i>0");
 		if( grid[i-1][j]===0 )
 		{console.log("sepSideNeighbors i>0 and grid i-1,j is empty passing %i %i to numberTouching",i-1,j);
-			if(numberTouching(i-1,j,avoidgrid)==0)
+			if(numberTouching(i-1,j,avoidgrid)===0)
 			{
 				iarr.push(i-1);
 				jarr.push(j);
@@ -465,7 +456,7 @@ function sepSideNeighbors(i,j,grid,gridsize,iarr,jarr,avoidgrid)// Totally check
 	{console.log("sepSideNeighbors j>0");
 		if(grid[i][j-1]===0 )
 		{console.log("sepSideNeighbors j>0 and i,j-a is empty passing %i %i to numberTouching",i,j-1);
-			if(numberTouching(i,j-1,avoidgrid)==0)
+			if(numberTouching(i,j-1,avoidgrid)===0)
 			{
 				iarr.push(i);
 				jarr.push(j-1);
@@ -479,7 +470,7 @@ function sepSideNeighbors(i,j,grid,gridsize,iarr,jarr,avoidgrid)// Totally check
 	{console.log("sepSideNeighbors i<gridsize-1");
 		if( grid[i+1][j]===0 )
 		{	console.log("sepSideNeighbors i<gridsize-1 and i+1,j is empty passing %i %i to numberTouching",i+1,j);
-			if( numberTouching(i+1,j,avoidgrid)==0)
+			if( numberTouching(i+1,j,avoidgrid)===0)
 			{
 				iarr.push(i+1);
 				jarr.push(j);
@@ -507,24 +498,24 @@ function sepSideNeighbors(i,j,grid,gridsize,iarr,jarr,avoidgrid)// Totally check
 	return pushCounter;
 }// end sepSides
 
-function sepSides(gridsize)
+function sepSides(gridsize)//sometimes infinite loops too  need to prevent seeds from being same
 {
 	console.log("sepSides, made it in");
 	var result1 = initialize(gridsize);
 	var result2 = initialize(gridsize);
-	var filledSquares=Math.floor(gridsize*gridsize/3)-2;//30% rounded down -first point
+	var filledSquares=Math.floor(gridsize*gridsize/3);//30% rounded down -first point
 	var i1 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 	var j1 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 		result1[i1][j1]=1;
 	var i2 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 	var j2 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
-	while(numberTouching(i2,j2,result1)!==0 )//making sure seeds dont touch
+	while(numberTouching(i2,j2,result1)!==0 && i1!==i2 && j1!==j2)//&&((i1!==i2)||(j1!==j2)) )//making sure seeds dont touch
 	{
 		i2 = Math.floor(Math.random()*gridsize);
 		j2 = Math.floor(Math.random()*gridsize);
 	}
 		result2[i2][j2]=1;//fill in first of result2
-	console.log("sepSides we got seeds initialized");
+	console.log("sepSides we got seeds initialized i1 %i j1 %i i2 %i j2 %i",i1,j1,i2,j2);
 	var i1edge=new Array();
 	var j1edge=new Array();
 	var i2edge=new Array();
@@ -608,6 +599,15 @@ function sepSides(gridsize)
 	return result1;
 }//end sepSides
 
+function empty1DArray(arrayToClear)
+{
+	while(arrayToClear.length>0)
+	{arrayToClear.pop();}
+	return arrayToClear;
+}
+
+
+
 function sepCornerNeighbors(i,j,grid,gridsize,iarr,jarr,avoidgrid)// Totally check [i][j+1]; [i],[j-1]; [i-1][j]; [i+1][j]
 {
 	//function getSideNeighbors(i,j,grid,gridsize,iarr,jarr)//WIP Totally check [i][j+1]; [i],[j-1]; [i-1][j]; [i+1][j]
@@ -673,108 +673,110 @@ function sepCornerNeighbors(i,j,grid,gridsize,iarr,jarr,avoidgrid)// Totally che
 	//to return things just shove j on the back of i, we will always get an even number, 0 pairs with array.length/2, add up
 	console.log("done getting all %i sepSideNeighbors of %i , %i",pushCounter,i,j);
 	return pushCounter;
-}// end sepCorners
-/*
-function sepCorners(gridsize)
+}// end sepCorners Neighbors
+
+
+function sepCorners(gridsize)//error! occasionally infinite loops
 {
+	console.log("sepCorners, made it in");
 	var result1 = initialize(gridsize);
 	var result2 = initialize(gridsize);
-
-	var filledSquares=Math.floor(gridsize*gridsize/4)-2;//30% rounded down -first point
+	var filledSquares=Math.floor(gridsize*gridsize/4);//30% rounded down -first point
 	var i1 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 	var j1 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
-	var i1arr=new Array();
-	var j1arr=new Array();
 		result1[i1][j1]=1;
 	var i2 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 	var j2 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
-	while(numberTouching(i2,j2,result1)!==0 )//making sure seeds dont touch
-		{
-			i2 = Math.floor(Math.random()*gridsize);
-			j2 = Math.floor(Math.random()*gridsize);
-		}
+	while(numberTouching(i2,j2,result1)!==0 && !(i2===i1 &&j1===j2))//making sure seeds dont touch
+	{
+		i2 = Math.floor(Math.random()*gridsize);
+		j2 = Math.floor(Math.random()*gridsize);
+	}
 		result2[i2][j2]=1;//fill in first of result2
-	console.log("sepCorners: original seed1: %i , %i",i1,j1);
-	console.log("sepCorners: original seed2: %i , %i",i2,j2);
-	var i2arr=new Array();
-	var j2arr=new Array();
+	console.log("sepCorners we got seeds initialized i1 %i j1 %i i2 %i j2 %i",i1,j1,i2,j2);
+	var i1edge=new Array();
+	var j1edge=new Array();
+	var i2edge=new Array();
+	var j2edge=new Array();
 
-	sepCornerNeighbors(i1,j1,result1,gridsize,i1arr,j1arr,result2);
-	sepCornerNeighbors(i2,j2,result2,gridsize,i2arr,j2arr,result1);
-	//console.log("adding %i to i1,j1 ",sepSideNeighbors(i1,j1,result1,gridsize,i1arr,j1arr,result2));//first sides for 1
-	//console.log("adding %i to i2,j2 ",sepSideNeighbors(i2,j2,result2,gridsize,i2arr,j2arr,result1));
-	console.log("printing i1,j1");
-	console.log(i1arr);
-	console.log(j1arr);
-	console.log("printing i2,j2");
-	console.log(i2arr);
-	console.log(j2arr);
-	console.log("i1arr.length =%i",i1arr.length);
-	console.log("i2arr.length =%i",i2arr.length);
-	console.log("just before while loop in SepCorners");
-	while(filledSquares>=0)
+	var iNeighbors=new Array();
+	var jNeighbors=new Array();
+	i1edge[0]=i1;
+	j1edge[0]=j1;
+	i2edge[0]=i2;
+	j2edge[0]=j2;
+
+	while(filledSquares>0)
+	{
+		console.log("sepCorners got into while loop");
+		var gridToFill=Math.floor(Math.random()*2);//0 0r 1
+		if(gridToFill===0)
 		{
-			var whichSeed=Math.floor(Math.random*2);
-			var randomNeighbor=Math.min(Math.floor(Math.random()*i1arr.length),Math.floor(Math.random()*i2arr.length));//min here 
-			if(i1arr.length>randomNeighbor)
+			console.log("speCorners filling first");
+			var edgeSeedIndex=Math.floor(Math.random()*i1edge.length);
+			i1=i1edge[edgeSeedIndex];
+			j1=j1edge[edgeSeedIndex];
+			var numNeighbor= sepCornerNeighbors(i1,j1,result1,gridsize,iNeighbors,jNeighbors,result2);
+			if(numNeighbor!==0)
 			{
-				console.log("going to fill result1; randomNeighbor is %i i1arr.length is %i",randomNeighbor,i1arr);
-				if(numberTouching(i1arr[randomNeighbor],j1arr[randomNeighbor],result2)==0)
+				console.log("number of choices we have : %i",numNeighbor);
+				numNeighbor=Math.floor(Math.random()*numNeighbor);
+				console.log("what we chose : %i",numNeighbor);
+				i1edge.push(iNeighbors[numNeighbor]);//not sure if valid syntax
+				j1edge.push(jNeighbors[numNeighbor]);
+				console.log("pushed onto edges, about to push onto results %i %i", iNeighbors[numNeighbor],jNeighbors[numNeighbor]);
+				result1[iNeighbors[numNeighbor]] [jNeighbors[numNeighbor]]=1;
+				if(cornersTouching(i1,j1,result1)==4)//throw it away no longer edge
 				{
-					result1[ i1arr[randomNeighbor] ][ j1arr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
-					console.log("results 1 :%i left to fill, filling %i ,%i",filledSquares,i1arr[randomNeighbor],j1arr[randomNeighbor]);
-					//I dont think we will ever run out of available neighborsToSplit
-					//getting all neighbors
-					sepCornerNeighbors(i1arr[randomNeighbor],j1arr[randomNeighbor],result1,gridsize,i1arr,j1arr,result2);
-					//now to split them up and add them to our current iarr and jnieghbors (at end)
-					//filling square
-					console.log("printing neighbors in result1");
-					console.log(i1arr);
-					console.log(j1arr);
-					//now to remove extras
-					filledSquares--;
+					var tempi=i1edge.pop();
+					var tempj=j1edge.pop();
+					if(edgeSeedIndex!==iarr[iarr.length-1])//we picked didnt pick the last one so have holes to fill;
+					{
+						i1edge[edgeSeedIndex]=tempi;
+						j1edge[edgeSeedIndex]=tempj;
+					}
 				}
-				i1=i1arr.pop();
-				j1=j1arr.pop();
-				if(randomNeighbor!==i1arr[i1arr.length-1])//we picked didnt pick the last one so have holes to fill;
-				{
-					i1arr[randomNeighbor]=i1;
-					j1arr[randomNeighbor]=j1;
-				}
-			}//end putting things in one
-			//console.log("i2arr.length =%i",i1arr.length);
-			if(i2arr.length>randomNeighbor )
+				filledSquares--;
+			}//MAKING SURE WE arent working with nothing
+			empty1DArray(iNeighbors);
+			empty1DArray(jNeighbors);
+		}//end filling first
+		else//filling second
+		{
+			console.log("filling second");
+			var edgeSeedIndex=Math.floor(Math.random()*i2edge.length);
+			i2=i2edge[edgeSeedIndex];
+			j2=j2edge[edgeSeedIndex];
+			var numNeighbor= sepCornerNeighbors(i2,j2,result2,gridsize,iNeighbors,jNeighbors,result1);
+			console.log("number of choices we have : %i",numNeighbor);
+			if(numNeighbor!==0)
 			{
-				console.log("going to fill result2; randomNeighbor is %i i2arr.length is %i",randomNeighbor,i2arr);
-
-				if(numberTouching(i2arr[randomNeighbor],j2arr[randomNeighbor],result1===0))
+				numNeighbor=Math.floor(Math.random()*numNeighbor);
+				console.log("what we chose : %i ",numNeighbor);
+				i2edge.push(iNeighbors[numNeighbor]);//not sure if valid syntax
+				j2edge.push(jNeighbors[numNeighbor]);
+				console.log("pushed onto edge  and now onto result %i %i",iNeighbors[numNeighbor],jNeighbors[numNeighbor]);
+				result2[iNeighbors[numNeighbor]] [jNeighbors[numNeighbor]]=1;
+				if(cornersTouching(i2,j2,result2)==4)
 				{
-					result2[ i2arr[randomNeighbor] ][ j2arr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
-					console.log(" result2 %i left to fill, filling %i ,%i",filledSquares,i2arr[randomNeighbor],j2arr[randomNeighbor]);
-					//I dont think we will ever run out of available neighborsToSplit
-					//getting all neighbors
-					sepCornerNeighbors(i2arr[randomNeighbor],j2arr[randomNeighbor],result2,gridsize,i2arr,j2arr,result1);
-					//now to split them up and add them to our current iarr and jnieghbors (at end)
-					//filling square
-					console.log("printing neighbors in result2");
-					console.log(i2arr);
-					console.log(j2arr);
-					//now to remove extras
-					filledSquares--;
+					var tempi=i2edge.pop();
+					var tempj=j2edge.pop();
+					if(edgeSeedIndex!==iarr[iarr.length-1])//we picked didnt pick the last one so have holes to fill;
+					{
+						i2edge[edgeSeedIndex]=tempi;
+						j2edge[edgeSeedIndex]=tempj;
+					}
 				}
-				i2=i2arr.pop();
-				j2=j2arr.pop();
-				if(randomNeighbor!==i2arr[i2arr.length-1])//we picked didnt pick the last one so have holes to fill;
-				{
-					i2arr[randomNeighbor]=i2;
-					j2arr[randomNeighbor]=j2;
-				}
-			}//done putting things into 2
-		}//end while loop
+				filledSquares--;
+			}//end we did something
+			empty1DArray(iNeighbors);
+			empty1DArray(jNeighbors);
+		}//end filling second
+	}//end fillling while loop
 	result1=mergeArs(result1, result2,gridsize);
 	return result1;
-}//end Sepsides
-*/
+}//end SepCorners
+
 
 function sepMixed(gridsize)
 {
