@@ -2,32 +2,36 @@
 <html>
 <head>
   <link rel='stylesheet' type='text/css' href='custom.css.scss'/>
+ 
+ <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+<%= csrf_meta_tag %>
 </head>
   
   <body> 
     <input type="button" name="button1" value="Done" style="position: absolute; left: 650px; top: 300px; width: 200px; " onclick="done()" />
+    
+    
     <%=image_tag("clockwise90.png", :id => "pic", class: "smiley", alt:"smiley") %>
     <div id="Inst"></div>
     <script type="text/javascript">
-      //the start time of the page
+    //the start time of the page
       var start = new Date().getTime(); 
       //the time elapsed since page started 
       var elapsed = '0.0';
-
-      
-
-
       var speedup = '<%=@user.speedup%>';
       var correctRow = '<%=@user.corrRow%>';
       var gridS = '<%=@user.gridSize%>';
       var levelNum = '<%=@user.levelNum%>';
-      var levelType = 0;
-      var attempts = 0; 
-      var levelInformation = '';
-      var correct = 50; 
+      var levelType = '<%=@user.levelType%>';
+      var attempts = '<%=@user.attempts%>'; 
+      var levelInformation = '<%=@user.levelData%>';
+      var correct = '<%=@user.totalCorrect%>'; 
       var group = '<%=@user.group%>';
-      var groupOne = [0,1,2,3];
-      var groupTwo = [0,1,2,3];
+      var id = '<%=@user.id%>';
+      var groupOne = [0,1,2,3,4];
+      var groupTwo = [0,1,2,3,4];
 
       /* function to make the clickable grid and to determine what happens when the block is clicked */
       var grid = clickableGrid(gridS,gridS,function(el,row,col,i){
@@ -53,7 +57,7 @@
       /*generates the instructions*/
       var instr = instructions();
       //creates the generated grid 
-      var generatedGrid = gridMaker(levelType,gridS);
+      var generatedGrid = gridMaker(level(group),gridS);
       /*call to convert double array to single array*/
       var newar = convert(generatedGrid);
       /*fills squares based on grid generated into an array*/
@@ -85,20 +89,31 @@
       }
 
      }
-
+     
+    
     /*called when user clicks the button*/
     function done(){
       //determines if the players grid and solved grid are the same 
       var temp = arraysIdentical(gridS,solved,player); 
       var timer = getInterval();
+    if(elapsed > 1){
+      attempts++;
       if(temp){
+        correctRow++;
+        correct++;
         if(speedup==1){
           levelType++;
           gridS++;
-        } 
+                 } 
         if(correctRow==4){
           correctRow = 0;
           levelType++;
+          var curLevel = level(group);
+          if(curLevel == 4){
+            gridS++;
+          }
+          
+
         }
         var emp = empty(18);
         player = initialize(gridS);
@@ -119,59 +134,66 @@
         document.body.appendChild(grid);
         document.body.appendChild(grid1);
         instr = instructions();
-        generatedGrid = gridMaker(levelType, gridS);
+
+        generatedGrid = gridMaker(level(group), gridS);
         /*call to convert double array to single array*/
         newar = convert(generatedGrid);
         /*fills squares based on grid generated into an array*/
         filled = fill(newar);
+
         solved = solver(gridS, instr, generatedGrid);
         displayInstr = writeInstr();
         draw = drawSmiley();
-        correctRow += 1;
+        start = new Date().getTime();
+        levelInformation += elapsed +','+ levelType+','+gridS+';';
         //gets variables ready to be passed to a ruby call
-        //var tests = update(speedup, correctRow, gridS, levelNum, levelType,attempts, levelInformation, totalCorrect);
+        $.ajax({
 
-        //Calls the controller to update the database variables 
-        var test = 'add_info(:speed=>"speedup_field", :correctRow=>"correctRow_field", :grid=>"gridS_field", :level=>"levelNum_field", :type => "levelType_field", :total=>"attempts_field", :levelInfo=>"levelInformation_field", :correct=>"totalCorrect_field")';
-      }
+          url: "/users/add",
+          type:"post",
+          dataType: 'json',
+          data: {speedup: speedup, correctRow: correctRow, gridSize: gridS, levelNum: levelNum, levelType: levelType, attempts: attempts, levelInfo: levelInformation, totalCorr: correct, id:id},
+          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+          headers: {
+    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+  },
+
+        }); 
+       }
     
     else{
       speedup = 0;
       correctRow = 0;
-        //gets variables ready to be passed to a ruby call
-        //var tests = update(speedup, correctRow, gridS, levelNum, levelType,attempts, levelInformation, totalCorrect);
-       /* jQuery.ajax({
-           data: 'totalCorrect=' + totalCorrect,
-           dataType: 'script',
-           type: 'post',
-           url: "/controller/add_info"
-        });*/
+      //gets variables ready to be passed to a ruby call
+       levelInformation += elapsed +','+ levelType+','+gridS+';';
+
+      //Calls the controller to update the database variables     
+         $.ajax({
+
+          url: "/users/add",
+          type:"post",
+          dataType: 'json',
+          data: {speedup: speedup, correctRow: correctRow, gridSize: gridS, levelNum: levelNum, levelType: levelType, attempts: attempts, levelInfo: levelInformation, totalCorr: correct, id:id},
+          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+          headers: {
+    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+  },
+
+        }); 
+
         //Calls the controller to update the database variables 
-        var h = '$("#totalCorrect_field").val(correct)';
-        var test = 'add_info(:speed=>"#speedup_field", :correctRow=>"#correctRow_field", :grid=>"#gridS_field", :level=>"#levelNum_field", :type => "#levelType_field", :total=>"#attempts_field", :levelInfo=>"#levelInformation_field", :correct=>"#totalCorrect_field")';
-         var testTemp = '<%=@user.totalCorrect%>';
-         alert("Not quite. Try again!");
-    }
+       
+       alert("Not quite. Try again!");
+    }}
 }
   
-  //function that updates the database
-  function update(speedup, correctRow,gridS, levelNum, levelType,attempt,levelInformation,totalCorrect){
-   $(document).ready(function(speedup, correctRow,gridS, levelNum, levelType,attempt,levelInformation,totalCorrect){
-        var a = $("#speedup_field").val(speedup);
-        var b = $("#correctRow_field").val(correctRow);
-        var c = $("#gridS_field").val(gridS);
-        var d = $("#levelNum_field").val(levelNum);
-        var e = $("#levelType_field").val(levelType);
-        var f = $("#attempts_field").val(attempt);
-        var g = $("#levelInformation_field").val(levelInformation);
-        var h = $("#totalCorrect_field").val(totalCorrect);
-   });
-
-  }
+ 
 
   //gets the next type of level
-  function levelType(group){
-    var type = levelType % 3; //should be 8 when all level types finished
+  function level(group){
+    var type = levelType % 5; //should be 8 when all level types finished
+  
+
     if(group  == 0){
       return groupOne[type];
     }
@@ -323,7 +345,6 @@ function instructions(){
 
 function gridMaker(shapetype, gridsize)
 {
-  //0=block, 1=sides, 2=corners, 3=cornerSides, 4=sepSides, 5=sepCorners, 6=sepMixed, 7=islands 
   var grid;
   switch(shapetype)
   {
@@ -337,20 +358,11 @@ function gridMaker(shapetype, gridsize)
       grid=corners(gridsize);
       break;
     case 3:
-      grid=cornerSides(gridsize);
+      grid=cornerSides(gridsize);//looks  the same as sides often
       break;
-    /*case 4:
-      grid=sepSides(gridsize);
+    case 4:
+      grid=islands(gridsize);//works
       break;
-    case 5:
-      grid=sepCorners(gridsize);
-      break;
-    case 6:
-      grid=sepMixed(gridsize);
-      break;
-    case 7:
-      grid=islands(gridsize);
-      break;*/
     default:
       console.log("this should never happen");
       grid=-1;
@@ -388,6 +400,20 @@ function block(gridsize)
   return result;
 }//end blocks
 
+function initialize(gridsize)
+{ 
+  var result = new Array();
+  for (var i = 0; i <gridsize; i++) 
+  {
+    result[i]=new Array();
+    for (var j = 0; j <gridsize; j++) 
+    {     
+      result[i][j]=0; 
+    }//end inner for loop
+  }//end outer for loop
+  return result;
+}//end initialize
+
 function getSideNeighbors(i,j,grid,gridsize,iarr,jarr)//WIP Totally check [i][j+1]; [i],[j-1]; [i-1][j]; [i+1][j]
 {
   //push shoves things onto the end and returns the length
@@ -396,32 +422,31 @@ function getSideNeighbors(i,j,grid,gridsize,iarr,jarr)//WIP Totally check [i][j+
   {
     iarr.push(i-1);
     jarr.push(j);
-    console.log("SideNeighbors: pushing %i ,%i onto neighbors",i-1,j);
+    //console.log("SideNeighbors: pushing %i ,%i onto neighbors",i-1,j);
     pushCounter++;
   }
   if(j>0 && grid[i][j-1]===0)
   {
     iarr.push(i);
     jarr.push(j-1);
-    console.log("SideNeighbors: pushing %i ,%i onto neighbors",i,j-1);
+    //console.log("SideNeighbors: pushing %i ,%i onto neighbors",i,j-1);
     pushCounter++;
   } 
   if(i<gridsize-1 && grid[i+1][j]===0)
   {
     iarr.push(i+1);
     jarr.push(j);
-    console.log("SideNeighbors: pushing %i ,%i onto neighbors",i+1,j);
+    //console.log("SideNeighbors: pushing %i ,%i onto neighbors",i+1,j);
     pushCounter++;
   }
   if(j<gridsize-1 && grid[i][j+1]===0)
   {
     iarr.push(i);
     jarr.push(j+1);
-    console.log("SideNeighbors: pushing %i ,%i onto neighbors",i,j+1);
+    //console.log("SideNeighbors: pushing %i ,%i onto neighbors",i,j+1);
     pushCounter++;
   }
   //to return things just shove j on the back of i, we will always get an even number, 0 pairs with array.length/2, add up
-  console.log("done getting all %i SideNeighbors of %i , %i",pushCounter,i,j);
   return pushCounter;
 }
 
@@ -432,7 +457,6 @@ function sides(gridsize)//error not gettin all always 4?
   var i = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
   var j = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
     result[i][j]=1;
-  console.log("sides: original seed: %i , %i",i,j);
   var iarr=new Array();
   var jarr=new Array();
   getSideNeighbors(i,j,result,gridsize,iarr,jarr);
@@ -440,15 +464,8 @@ function sides(gridsize)//error not gettin all always 4?
     {
       var randomNeighbor=Math.floor(Math.random()*iarr.length);
       result[ iarr[randomNeighbor] ][ jarr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
-      console.log("%i left to fill, filling %i ,%i",filledSquares,iarr[randomNeighbor],jarr[randomNeighbor]);
-      //I dont think we will ever run out of available neighborsToSplit
       //getting all neighbors
       getSideNeighbors(iarr[randomNeighbor],jarr[randomNeighbor],result,gridsize,iarr,jarr);
-      //now to split them up and add them to our current iarr and jnieghbors (at end)
-      //filling square
-      console.log("printing neighbors");
-      console.log(iarr);
-      console.log(jarr);
       //now to remove extras
       i=iarr.pop();
       j=jarr.pop();
@@ -470,32 +487,31 @@ function getCornerNeighbors(i,j,grid,gridsize,iarr,jarr)//WIP Totally check [i+1
   {
     iarr.push(i-1);
     jarr.push(j-1);
-    console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i-1,j-1);
+    //console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i-1,j-1);
     pushCounter++;
   }
-  if(j>0 && i<gridsize-1 && grid[i][j-1]===0)
+  if(j>0 && i<gridsize-1 && grid[i+1][j-1]===0)
   {
     iarr.push(i+1);
     jarr.push(j-1);
-    console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i+1,j-1);
+    //console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i+1,j-1);
     pushCounter++;
   } 
-  if(i<gridsize-1 && j<gridsize-1 && grid[i+1][j]===0)
+  if(i<gridsize-1 && j<gridsize-1 && grid[i+1][j+1]===0)
   {
     iarr.push(i+1);
     jarr.push(j+1);
-    console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i+1,j+1);
+    //console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i+1,j+1);
     pushCounter++;
   }
-  if(j<gridsize-1 && i>0 && grid[i][j+1]===0)
+  if(j<gridsize-1 && i>0 && grid[i-1][j+1]===0)
   {
     iarr.push(i-1);
     jarr.push(j+1);
-    console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i-1,j+1);
+    //console.log("CornerNeighbors: pushing %i ,%i onto neighbors",i-1,j+1);
     pushCounter++;
   }
   //to return things just shove j on the back of i, we will always get an even number, 0 pairs with array.length/2, add up
-  console.log("done getting all %i CornerNeighbors of %i , %i",pushCounter,i,j);
   return pushCounter;
 }
 
@@ -507,7 +523,6 @@ function corners(gridsize)//error not gettin all always 4?
   var i = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
   var j = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
     result[i][j]=1;
-  console.log("corners: original seed: %i , %i",i,j);
   var iarr=new Array();
   var jarr=new Array();
   getCornerNeighbors(i,j,result,gridsize,iarr,jarr);
@@ -515,15 +530,8 @@ function corners(gridsize)//error not gettin all always 4?
     {
       var randomNeighbor=Math.floor(Math.random()*iarr.length);
       result[ iarr[randomNeighbor] ][ jarr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
-      console.log("%i left to fill, filling %i ,%i",filledSquares,iarr[randomNeighbor],jarr[randomNeighbor]);
-      //I dont think we will ever run out of available neighborsToSplit
       //getting all neighbors
       getCornerNeighbors(iarr[randomNeighbor],jarr[randomNeighbor],result,gridsize,iarr,jarr);
-      //now to split them up and add them to our current iarr and jnieghbors (at end)
-      //filling square
-      console.log("printing neighbors");
-      console.log(iarr);
-      console.log(jarr);
       //now to remove extras
       i=iarr.pop();
       j=jarr.pop();
@@ -544,25 +552,18 @@ function cornerSides(gridsize)
   var i = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
   var j = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
     result[i][j]=1;
-  console.log("corners: original seed: %i , %i",i,j);
   var iarr=new Array();
   var jarr=new Array();
   getCornerNeighbors(i,j,result,gridsize,iarr,jarr);
   getSideNeighbors(i,j,result,gridsize,iarr,jarr);
-  while(filledSquares>=0)
+  while(filledSquares>0)
     {
       var randomNeighbor=Math.floor(Math.random()*iarr.length);
+      console.log("randomNeighbor is %i iarr.length %i jarr.length %i",randomNeighbor,iarr.length,jarr.length);
       result[ iarr[randomNeighbor] ][ jarr[randomNeighbor] ]=1;//setting randomly picked neighbor to 1
-      console.log("%i left to fill, filling %i ,%i",filledSquares,iarr[randomNeighbor],jarr[randomNeighbor]);
-      //I dont think we will ever run out of available neighborsToSplit
       //getting all neighbors
       getCornerNeighbors(iarr[randomNeighbor],jarr[randomNeighbor],result,gridsize,iarr,jarr);
       getSideNeighbors(iarr[randomNeighbor],jarr[randomNeighbor],result,gridsize,iarr,jarr);
-      //now to split them up and add them to our current iarr and jnieghbors (at end)
-      //filling square
-      console.log("printing neighbors");
-      console.log(iarr);
-      console.log(jarr);
       //now to remove extras
       i=iarr.pop();
       j=jarr.pop();
@@ -573,10 +574,128 @@ function cornerSides(gridsize)
       }
       filledSquares--;
     }
+  var index;
+  for(index=0; index<iarr.length; index++)
+  {
+
+    if(cornersTouching(iarr[index],jarr[index],result)===1 && numberTouching(iarr[index],jarr[index],result)===1)
+    {
+      result[iarr[index]][jarr[index]]=1;
+      index=iarr.length;
+    }
+
+    else
+    {
+      if(i==iarr.length-1)
+      {
+        i=2*iarr.length;
+      }
+        //marker for something that should NEVER happen
+    }
+  } 
   return result;
-}//end sides
+}//end cornerSides
+
+function cornersTouching(i,j,grid)
+{
+  var result=0;
+  //corners
+  if(i>0 && j>0 )
+  {
+    if(grid[i-1][j-1]===1)
+    {
+      result++;
+    }
+  }
+  if(j>0 && i<gridS-1)
+  {
+    if(grid[i+1][j-1]===1)
+    {
+      result++;
+    }
+  } 
+  if(i<gridS-1 && j<gridS-1)
+  {
+    if(grid[i+1][j+1]===1)
+    {
+      result++;
+    }
+  }
+  if(j<gridS-1 && i>0)
+  {
+    if( grid[i-1][j+1]===1)
+    {
+      result++;
+    }
+  }
+  return result;
+}//end corners touching
+
+function sidesTouching(i,j,grid)
+{
+  var result=0;
+  if(i>0 )
+  {
+    if(grid[i-1][j]===1)
+    {
+      result++;
+    }
+  }
+  
+  if(j>0 )//already included
+  {
+    if(grid[i][j-1]===1)
+    {
+      result++;
+    }
+  }
+  if(i<gridS-1 )
+  {
+    if(grid[i+1][j]===1)
+    {
+      result++;
+    }
+  }
+  if(j<gridS-1 )
+  {
+    if(grid[i][j+1]===1)
+    {
+      result++;
+    }
+  }
+  return result;
+}//end sides touching
+
+function numberTouching (i,j,grid)//returns 0 if nothing in the grid touches, else returns number touching
+{
+  var result=0;
+  //corners
+  result=result+cornersTouching(i,j,grid);
+  //sides
+  result=result+sidesTouching(i,j,grid);
+  return result;
+}//end numberTouching
+
+function islands(gridsize)
+{
+  var result=initialize(gridsize);
+  var filledSquares=Math.floor(gridsize);//30% rounded down -first point
+
+  while(filledSquares>0)
+  {
+    var i = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+    var j = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
+    if(numberTouching(i,j,result)===0 && result[i][j]===0)
+    {
+      result[i][j]=1;
+      filledSquares=filledSquares-1;
+    }
+  }
+  return result;
+}
 
      
+      
     </script>
     
      </body>

@@ -2,10 +2,10 @@ class User < ActiveRecord::Base
   attr_accessor :remember_token
   before_save {self.name = name.downcase}
   validates :name, presence: true, length: { maximum: 50 },uniqueness: { case_sensitive: false }
-  validates :age, presence: true
-  validates :gender, presence: true, length: { maximum: 1 }
+  validates :age, presence: true, allow_nil: true
+  validates :gender, presence: true, length: { maximum: 1 }, allow_nil: true
   has_secure_password
-  validates :password, length: { minimum: 6 }
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
   after_initialize :init
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
