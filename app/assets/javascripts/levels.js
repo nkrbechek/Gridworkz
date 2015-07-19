@@ -509,11 +509,25 @@ function sepSides(gridsize)//sometimes infinite loops too  need to prevent seeds
 		result1[i1][j1]=1;
 	var i2 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
 	var j2 = Math.floor(Math.random()*gridsize);//0-(gridsize-1)
-	while(numberTouching(i2,j2,result1)!==0 && i1!==i2 && j1!==j2)//&&((i1!==i2)||(j1!==j2)) )//making sure seeds dont touch
+	if(gridsize>3)
 	{
-		i2 = Math.floor(Math.random()*gridsize);
-		j2 = Math.floor(Math.random()*gridsize);
+		while(i1==i2 ||i1==i2+1 || i1==i2-1)
+			{i2 = Math.floor(Math.random()*gridsize);}
+		while(j1==j2 || j1==j2+1 || j1==j2-1)
+			{j2 = Math.floor(Math.random()*gridsize);}
 	}
+	else
+	{
+		if(i1===1 || i1===2)
+			{i1=2; i2=0;}
+		else//i1==0
+			{i2=2;}
+		if(j1==1 || j1==2)
+			{j1=2; j2=0;}
+		else//j1==0
+			{j2=2;}
+	}
+	
 		result2[i2][j2]=1;//fill in first of result2
 	console.log("sepSides we got seeds initialized i1 %i j1 %i i2 %i j2 %i",i1,j1,i2,j2);
 	var i1edge=new Array();
