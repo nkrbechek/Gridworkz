@@ -67,7 +67,11 @@ The player must click the “Done” button and get it right on their first atte
 The player moves on to the next more difficult instruction with the same grid pattern
 
 Research Questions and Methods For Answering Them:
-	Do different demographics approach the game differently? (ie some take more time but get more right immediately while others employ more of a trial and error effect?) ->measure time per submission and number of wrong submissions
+
+	Do different demographics approach the game differently? (ie some take more time but get more right immediately while others employ more of a trial and error effect?) -> measure time per submission and number of wrong submissions
+	
 	Do game playing styles influence improvement rate and if so what style should be encouraged?
-	What makes a shape “difficult” to mentally rotate? ->test different kinds of shapes in tutorial mode and see where people do best/worst
-	Where do people start ie what is their first move, and is this affected demographically? do they start in the middle of  a shape or at an edge? which edge?
+	
+	What makes a shape “difficult” to mentally rotate? -> test different kinds of shapes in tutorial mode and see where people do best/worst
+	
+	Where do people start ie what is their first move, and is this affected demographically? Do they start in the middle of a shape or at an edge? Which edge?
