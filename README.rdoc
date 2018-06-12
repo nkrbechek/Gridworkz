@@ -18,36 +18,36 @@ Patterns in hypothesised levels of difficulty ranked from  easy to hard (1 being
 -------------
 | X | X | X |
 -------------
-|   |   |   |
+| - | - | - |
 -------------
-|   |   |   |
+| - | - | - |
 -------------
 
 2)Any patern consisting of contiguous sides touching as opposed to touching at corners:
 -------------
-| X | X |   |
+| X | X | - |
 -------------
-| X |   |   |
+| X | - | - |
 -------------
-|   |   |   |
+| - | - | - |
 -------------
 
 3) Pattern with corners touching
 -------------
-| X |   |   |
+| X | - | - |
 -------------
-|   | X |   |
+| - | X | - |
 -------------
-|   |   | X |
+| - | - | X |
 -------------
 
 4) Patterns including comlpetely isolated squared:
 -------------
-| X |   | X |
+| X | - | X |
 -------------
-|   |   |   |
+| - | - | - |
 -------------
-| X |   |   |
+| X | - | - |
 -------------
 
 Implementation Details: 
