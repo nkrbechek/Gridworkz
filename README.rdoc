@@ -1,28 +1,73 @@
-== README
+This game was designed to test and develop spatial rotation skills to adress a  skill and confidence gap in STEM.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+We have hypotheses as to what makes mental rotation difficult:
 
-Things you may want to cover:
+difficulty likely increases as grid size increases
 
-* Ruby version
+specific rotation instructions may be more difficult than others
 
-* System dependencies
+Instructions ranked from easy to hard (1 being the easiest):
+90 degrees clockwise/90 degrees counter clockwise
+270 degrees clockwise/270 degrees counter clockwise (if the player knows the trick or has the smiley reference pictures)
+180 degrees clockwise/180 degrees counter clockwise
+the pattern of which blocks are filled in the original grid are more difficult than others
 
-* Configuration
+Patterns in hypothesised levels of difficulty ranked from  easy to hard (1 being the easiest)
 
-* Database creation
+1)Filled squares are all in a row or column, all touching at the same angle ie:
+-------------
+| X | X | X |
+-------------
+|   |   |   |
+-------------
+|   |   |   |
+-------------
 
-* Database initialization
+2)Any patern consisting of contiguous sides touching as opposed to touching at corners:
+-------------
+| X | X |   |
+-------------
+| X |   |   |
+-------------
+|   |   |   |
+-------------
 
-* How to run the test suite
+3) Pattern with corners touching
+-------------
+| X |   |   |
+-------------
+|   | X |   |
+-------------
+|   |   | X |
+-------------
 
-* Services (job queues, cache servers, search engines, etc.)
+4) Patterns including comlpetely isolated squared:
+-------------
+| X |   | X |
+-------------
+|   |   |   |
+-------------
+| X |   |   |
+-------------
 
-* Deployment instructions
+Implementation Details: 
+- Make a function to generate each pattern type and make them randomly generated [DONE]
+- Make controls with switched difficulties to find out what is actually easier
 
-* ...
+What to Control 
+- Make a “Check My Work” or “Done”  button for the player to confirm when they believe they have solved the puzzle
+helps normalise styles and makes sure people are thinking [DONE]
+- speeds up algorithm
+- gives us times attempted to track
+- Reward system/Gamified feedback
+- Unlockable levels
 
+Player starts with 3 by 3 grid with the first phase of grid patterns (filled squares are in a row) and easiest instruction
+The player must click the “Done” button and get it right on their first attempt 5 times in a row in order to move on
+The player moves on to the next more difficult instruction with the same grid pattern
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Research Questions and Methods For Answering Them:
+	Do different demographics approach the game differently? (ie some take more time but get more right immediately while others employ more of a trial and error effect?) ->measure time per submission and number of wrong submissions
+	Do game playing styles influence improvement rate and if so what style should be encouraged?
+	What makes a shape “difficult” to mentally rotate? ->test different kinds of shapes in tutorial mode and see where people do best/worst
+	Where do people start ie what is their first move, and is this affected demographically? do they start in the middle of  a shape or at an edge? which edge?
